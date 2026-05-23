@@ -1,0 +1,41 @@
+name: publish
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+
+jobs:
+  publish:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runner: macos-14
+            system: aarch64-darwin
+          - runner: ubuntu-24.04-arm
+            system: aarch64-linux
+    runs-on: ${{ matrix.runner }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Flox
+        uses: flox/install-flox-action@v3
+
+      - name: Authenticate to FloxHub
+        env:
+          FLOX_FLOXHUB_TOKEN: ${{ secrets.FLOXHUB_TOKEN }}
+        run: |
+          if [ -z "${FLOX_FLOXHUB_TOKEN:-}" ]; then
+            echo "FLOXHUB_TOKEN secret not configured" >&2
+            exit 1
+          fi
+
+      - name: Build and publish
+        env:
+          FLOX_FLOXHUB_TOKEN: ${{ secrets.FLOXHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          flox build sfw
+          flox publish --org jbayer sfw

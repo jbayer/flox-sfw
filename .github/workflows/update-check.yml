@@ -1,0 +1,77 @@
+name: update-check
+
+on:
+  schedule:
+    - cron: "17 13 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Determine current and latest versions
+        id: versions
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          current=$(grep -E '^SFW_VERSION' .flox/env/manifest.toml | head -1 | sed -E 's/.*"([^"]+)".*/\1/')
+          latest=$(gh release view --repo SocketDev/sfw-free --json tagName --jq '.tagName' | sed 's/^v//')
+          echo "current=$current" >> "$GITHUB_OUTPUT"
+          echo "latest=$latest" >> "$GITHUB_OUTPUT"
+          if [ "$current" = "$latest" ]; then
+            echo "up_to_date=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "up_to_date=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Fetch new sha256 digests
+        if: steps.versions.outputs.up_to_date == 'false'
+        id: digests
+        env:
+          GH_TOKEN: ${{ github.token }}
+          LATEST: ${{ steps.versions.outputs.latest }}
+        run: |
+          set -euo pipefail
+          assets=$(gh release view "v${LATEST}" --repo SocketDev/sfw-free --json assets --jq '.assets')
+          darwin_arm64=$(echo "$assets" | jq -r '.[] | select(.name == "sfw-free-macos-arm64") | .digest' | sed 's/^sha256://')
+          linux_arm64=$(echo "$assets" | jq -r '.[] | select(.name == "sfw-free-linux-arm64") | .digest' | sed 's/^sha256://')
+          if [ -z "$darwin_arm64" ] || [ -z "$linux_arm64" ]; then
+            echo "Missing expected asset digests for v${LATEST}" >&2
+            exit 1
+          fi
+          echo "darwin_arm64=$darwin_arm64" >> "$GITHUB_OUTPUT"
+          echo "linux_arm64=$linux_arm64" >> "$GITHUB_OUTPUT"
+
+      - name: Apply bump to manifest
+        if: steps.versions.outputs.up_to_date == 'false'
+        env:
+          LATEST: ${{ steps.versions.outputs.latest }}
+          DARWIN_SHA: ${{ steps.digests.outputs.darwin_arm64 }}
+          LINUX_SHA: ${{ steps.digests.outputs.linux_arm64 }}
+        run: |
+          set -euo pipefail
+          sed -i -E "s|^SFW_VERSION = \".*\"|SFW_VERSION = \"${LATEST}\"|" .flox/env/manifest.toml
+          sed -i -E "s|^SFW_SHA256_DARWIN_ARM64 = \".*\"|SFW_SHA256_DARWIN_ARM64 = \"${DARWIN_SHA}\"|" .flox/env/manifest.toml
+          sed -i -E "s|^SFW_SHA256_LINUX_ARM64 = \".*\"|SFW_SHA256_LINUX_ARM64 = \"${LINUX_SHA}\"|" .flox/env/manifest.toml
+
+      - name: Open PR
+        if: steps.versions.outputs.up_to_date == 'false'
+        uses: peter-evans/create-pull-request@v6
+        with:
+          branch: bump/sfw-${{ steps.versions.outputs.latest }}
+          title: "Bump sfw to v${{ steps.versions.outputs.latest }}"
+          commit-message: "Bump sfw ${{ steps.versions.outputs.current }} -> ${{ steps.versions.outputs.latest }}"
+          body: |
+            Automated bump from upstream [SocketDev/sfw-free release v${{ steps.versions.outputs.latest }}](https://github.com/SocketDev/sfw-free/releases/tag/v${{ steps.versions.outputs.latest }}).
+
+            - Previous: `${{ steps.versions.outputs.current }}`
+            - New: `${{ steps.versions.outputs.latest }}`
+
+            After merging, tag `v${{ steps.versions.outputs.latest }}` to trigger the publish workflow.

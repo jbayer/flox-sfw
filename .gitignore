@@ -1,0 +1,5 @@
+result
+result-*
+.flox/run
+.flox/cache
+.flox/log

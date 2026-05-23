@@ -1,0 +1,169 @@
+{
+  "lockfile-version": 1,
+  "manifest": {
+    "schema-version": "1.12.0",
+    "install": {
+      "coreutils": {
+        "pkg-path": "coreutils"
+      },
+      "curl": {
+        "pkg-path": "curl"
+      }
+    },
+    "vars": {
+      "SFW_SHA256_DARWIN_ARM64": "fd75944bddc663bee2b19f15367706387113d9609fea4f51b02fc3b5dbdb9281",
+      "SFW_SHA256_LINUX_ARM64": "d7e969c17e6d23ac1cb0dea81ff87ef9bca2d83570270d91aab14b2a7fb66ad4",
+      "SFW_VERSION": "1.10.0"
+    },
+    "options": {
+      "systems": [
+        "aarch64-darwin",
+        "aarch64-linux"
+      ]
+    },
+    "build": {
+      "sfw": {
+        "command": "  set -euo pipefail\n\n  case \"$(uname -s)-$(uname -m)\" in\n    Darwin-arm64)\n      asset=\"sfw-free-macos-arm64\"\n      expected_sha=\"$SFW_SHA256_DARWIN_ARM64\"\n      ;;\n    Linux-aarch64)\n      asset=\"sfw-free-linux-arm64\"\n      expected_sha=\"$SFW_SHA256_LINUX_ARM64\"\n      ;;\n    *)\n      echo \"Unsupported system: $(uname -sm)\" >&2\n      exit 1\n      ;;\n  esac\n\n  url=\"https://github.com/SocketDev/sfw-free/releases/download/v${SFW_VERSION}/${asset}\"\n  echo \"Downloading ${url}\"\n  curl --fail --silent --show-error --location --output sfw \"$url\"\n\n  echo \"${expected_sha}  sfw\" | sha256sum -c -\n\n  mkdir -p \"$out/bin\"\n  mv sfw \"$out/bin/sfw\"\n  chmod +x \"$out/bin/sfw\"\n",
+        "runtime-packages": [],
+        "sandbox": "off",
+        "version": {
+          "command": "echo $SFW_VERSION"
+        },
+        "description": "Socket Firewall Free - wraps your package manager to prevent installation of malicious packages"
+      }
+    }
+  },
+  "packages": [
+    {
+      "attr_path": "coreutils",
+      "broken": false,
+      "derivation": "/nix/store/cvg9lkn1bkgh7wfw9idx5l3wlqci58p0-coreutils-9.11.drv",
+      "description": "GNU Core Utilities",
+      "install_id": "coreutils",
+      "license": "GPL-3.0-or-later",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=f83fc3c307e74bc5fd5adb7eb6b8b13ffd2a36e1",
+      "name": "coreutils-9.11",
+      "pname": "coreutils",
+      "rev": "f83fc3c307e74bc5fd5adb7eb6b8b13ffd2a36e1",
+      "rev_count": 1002845,
+      "rev_date": "2026-05-21T09:53:25Z",
+      "scrape_date": "2026-05-23T07:13:57.327885Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "9.11",
+      "outputs_to_install": [
+        "out"
+      ],
+      "outputs": {
+        "info": "/nix/store/83kk1z6r4n7il426hl9qhgvjn3gw3i3k-coreutils-9.11-info",
+        "out": "/nix/store/y0ha8v4gh5vnwwmp2r0msfbdlvgwv2np-coreutils-9.11"
+      },
+      "system": "aarch64-darwin",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "coreutils",
+      "broken": false,
+      "derivation": "/nix/store/hcyz1x1w9dxfsmq5kv2abdw2qvnv766h-coreutils-9.11.drv",
+      "description": "GNU Core Utilities",
+      "install_id": "coreutils",
+      "license": "GPL-3.0-or-later",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=f83fc3c307e74bc5fd5adb7eb6b8b13ffd2a36e1",
+      "name": "coreutils-9.11",
+      "pname": "coreutils",
+      "rev": "f83fc3c307e74bc5fd5adb7eb6b8b13ffd2a36e1",
+      "rev_count": 1002845,
+      "rev_date": "2026-05-21T09:53:25Z",
+      "scrape_date": "2026-05-23T07:48:45.441153Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "9.11",
+      "outputs_to_install": [
+        "out",
+        "out"
+      ],
+      "outputs": {
+        "debug": "/nix/store/p2vk0ll7l8dp5n203ffrvjpj491h6x90-coreutils-9.11-debug",
+        "info": "/nix/store/c96my4whwlw38gqj39370k93bbbrwn3h-coreutils-9.11-info",
+        "out": "/nix/store/9bhf1ff1kwhmyynws5jkjp8k7pkh6kix-coreutils-9.11"
+      },
+      "system": "aarch64-linux",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "curl",
+      "broken": false,
+      "derivation": "/nix/store/pdhn4vf0wgqcrd0zdgc8awsian0z8dwj-curl-8.20.0.drv",
+      "description": "Command line tool for transferring files with URL syntax",
+      "install_id": "curl",
+      "license": "curl",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=f83fc3c307e74bc5fd5adb7eb6b8b13ffd2a36e1",
+      "name": "curl-8.20.0",
+      "pname": "curl",
+      "rev": "f83fc3c307e74bc5fd5adb7eb6b8b13ffd2a36e1",
+      "rev_count": 1002845,
+      "rev_date": "2026-05-21T09:53:25Z",
+      "scrape_date": "2026-05-23T07:13:57.373778Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "8.20.0",
+      "outputs_to_install": [
+        "bin",
+        "man"
+      ],
+      "outputs": {
+        "bin": "/nix/store/56qb7awbplza7z35iz4k8gyr2fjk2acw-curl-8.20.0-bin",
+        "dev": "/nix/store/z43571apx58qpq4kdz207f4vcbbzd6nj-curl-8.20.0-dev",
+        "devdoc": "/nix/store/rasyzrv7w7430kfk4jppr9xa56dzr487-curl-8.20.0-devdoc",
+        "man": "/nix/store/8kl0c1xmasvhrn76cjmdmkk5qcq6spkn-curl-8.20.0-man",
+        "out": "/nix/store/5ksfjgx970dszhbjn6kcbcf07yn52s1i-curl-8.20.0"
+      },
+      "system": "aarch64-darwin",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "curl",
+      "broken": false,
+      "derivation": "/nix/store/n3hrbppi6lsz9s8zr5gydmbnp4pvndxh-curl-8.20.0.drv",
+      "description": "Command line tool for transferring files with URL syntax",
+      "install_id": "curl",
+      "license": "curl",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=f83fc3c307e74bc5fd5adb7eb6b8b13ffd2a36e1",
+      "name": "curl-8.20.0",
+      "pname": "curl",
+      "rev": "f83fc3c307e74bc5fd5adb7eb6b8b13ffd2a36e1",
+      "rev_count": 1002845,
+      "rev_date": "2026-05-21T09:53:25Z",
+      "scrape_date": "2026-05-23T07:48:45.537375Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "8.20.0",
+      "outputs_to_install": [
+        "bin",
+        "man"
+      ],
+      "outputs": {
+        "bin": "/nix/store/0p84b7rk4ahizd1mdjgq810vhjfdwwj6-curl-8.20.0-bin",
+        "debug": "/nix/store/97022mlgi4x3r60f3bcz8d3jksl25czy-curl-8.20.0-debug",
+        "dev": "/nix/store/sv4cxcl457drp3wi33jqdd43ya1l2svc-curl-8.20.0-dev",
+        "devdoc": "/nix/store/gfarxizj7rjp7h9rpssg835q26h253hc-curl-8.20.0-devdoc",
+        "man": "/nix/store/fbl5hjkyf8csbvvj3fmrga0a76pf4igz-curl-8.20.0-man",
+        "out": "/nix/store/c6mpfdagkmgq8z7j0l07p2xadr5kvrd1-curl-8.20.0"
+      },
+      "system": "aarch64-linux",
+      "group": "toplevel",
+      "priority": 5
+    }
+  ]
+}

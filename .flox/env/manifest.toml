@@ -1,0 +1,57 @@
+## Flox packaging of Socket Firewall Free (sfw)
+##
+## Upstream:  https://github.com/SocketDev/sfw-free
+## Releases:  https://github.com/SocketDev/sfw-free/releases
+##
+## To bump the pinned version, update SFW_VERSION and the per-system
+## SFW_SHA256_* values under [vars], then `flox build sfw`.
+schema-version = "1.12.0"
+
+[install]
+curl.pkg-path = "curl"
+coreutils.pkg-path = "coreutils"
+
+[vars]
+SFW_VERSION = "1.10.0"
+SFW_SHA256_DARWIN_ARM64 = "fd75944bddc663bee2b19f15367706387113d9609fea4f51b02fc3b5dbdb9281"
+SFW_SHA256_LINUX_ARM64 = "d7e969c17e6d23ac1cb0dea81ff87ef9bca2d83570270d91aab14b2a7fb66ad4"
+
+[build.sfw]
+description = "Socket Firewall Free - wraps your package manager to prevent installation of malicious packages"
+version.command = "echo $SFW_VERSION"
+sandbox = "off"
+runtime-packages = []
+command = '''
+  set -euo pipefail
+
+  case "$(uname -s)-$(uname -m)" in
+    Darwin-arm64)
+      asset="sfw-free-macos-arm64"
+      expected_sha="$SFW_SHA256_DARWIN_ARM64"
+      ;;
+    Linux-aarch64)
+      asset="sfw-free-linux-arm64"
+      expected_sha="$SFW_SHA256_LINUX_ARM64"
+      ;;
+    *)
+      echo "Unsupported system: $(uname -sm)" >&2
+      exit 1
+      ;;
+  esac
+
+  url="https://github.com/SocketDev/sfw-free/releases/download/v${SFW_VERSION}/${asset}"
+  echo "Downloading ${url}"
+  curl --fail --silent --show-error --location --output sfw "$url"
+
+  echo "${expected_sha}  sfw" | sha256sum -c -
+
+  mkdir -p "$out/bin"
+  mv sfw "$out/bin/sfw"
+  chmod +x "$out/bin/sfw"
+'''
+
+[options]
+systems = [
+  "aarch64-darwin",
+  "aarch64-linux",
+]
