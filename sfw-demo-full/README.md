@@ -2,7 +2,7 @@
 
 A Flox consumption environment that shows how [Socket Firewall Free (sfw)](https://github.com/SocketDev/sfw-free) wraps `npm`, `pip`, and `cargo` and blocks known-malicious packages. The shipped shims cover all six supported package managers (`npm`, `yarn`, `pnpm`, `pip`, `uv`, `cargo`) — this demo just exercises three of them with the tooling it pre-installs.
 
-For a minimal "just install sfw with the shims wired up" environment that doesn't ship its own package managers, see the sibling [`sfw-demo-basic/`](../sfw-demo-basic).
+For a minimal "just install sfw with the shims" environment that doesn't ship its own package managers, see the sibling [`sfw-demo-basic/`](../sfw-demo-basic).
 
 ## Warning
 
