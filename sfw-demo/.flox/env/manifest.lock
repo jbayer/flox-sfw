@@ -6,6 +6,12 @@
       "nodejs": {
         "pkg-path": "nodejs"
       },
+      "pip": {
+        "pkg-path": "python313Packages.pip"
+      },
+      "python3": {
+        "pkg-path": "python313"
+      },
       "sfw": {
         "pkg-path": "jbayer/sfw"
       }
@@ -77,6 +83,130 @@
       "priority": 5
     },
     {
+      "attr_path": "python313Packages.pip",
+      "broken": false,
+      "derivation": "/nix/store/qggbl3fp2zgjkzf0p81xahdc1b4aqzrz-python3.13-pip-25.3.drv",
+      "description": "PyPA recommended tool for installing Python packages",
+      "install_id": "pip",
+      "license": "[ MIT ]",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=f83fc3c307e74bc5fd5adb7eb6b8b13ffd2a36e1",
+      "name": "python3.13-pip-25.3",
+      "pname": "pip",
+      "rev": "f83fc3c307e74bc5fd5adb7eb6b8b13ffd2a36e1",
+      "rev_count": 1002845,
+      "rev_date": "2026-05-21T09:53:25Z",
+      "scrape_date": "2026-05-23T07:14:51.341530Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "25.3",
+      "outputs_to_install": [
+        "man",
+        "out"
+      ],
+      "outputs": {
+        "dist": "/nix/store/s609bcv18lafja5aqch4wgr6whmrc8md-python3.13-pip-25.3-dist",
+        "man": "/nix/store/qr1w31hdk091xipm2kspss6rigjlmc0p-python3.13-pip-25.3-man",
+        "out": "/nix/store/9szjhahyli9mb1yfz8gyny8vy3lfsxy6-python3.13-pip-25.3"
+      },
+      "system": "aarch64-darwin",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "python313Packages.pip",
+      "broken": false,
+      "derivation": "/nix/store/gdg2gikdjv9xkvdamzl275vbj4jk9i2r-python3.13-pip-25.3.drv",
+      "description": "PyPA recommended tool for installing Python packages",
+      "install_id": "pip",
+      "license": "[ MIT ]",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=f83fc3c307e74bc5fd5adb7eb6b8b13ffd2a36e1",
+      "name": "python3.13-pip-25.3",
+      "pname": "pip",
+      "rev": "f83fc3c307e74bc5fd5adb7eb6b8b13ffd2a36e1",
+      "rev_count": 1002845,
+      "rev_date": "2026-05-21T09:53:25Z",
+      "scrape_date": "2026-05-23T07:49:57.877400Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "25.3",
+      "outputs_to_install": [
+        "man",
+        "out"
+      ],
+      "outputs": {
+        "dist": "/nix/store/a84zir49j127l1xln4zpbzgpyqlckiz6-python3.13-pip-25.3-dist",
+        "man": "/nix/store/8xm9f53g3cdw02kmrcwj91nwr12w3w5d-python3.13-pip-25.3-man",
+        "out": "/nix/store/8x0vvbzfmww1lmzzc0dzdrizm7cwlxy4-python3.13-pip-25.3"
+      },
+      "system": "aarch64-linux",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "python313",
+      "broken": false,
+      "derivation": "/nix/store/jvznzx6apcj5x15cnsw3hnamrflwxaq0-python3-3.13.13.drv",
+      "description": "High-level dynamically-typed programming language",
+      "install_id": "python3",
+      "license": "Python-2.0",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=f83fc3c307e74bc5fd5adb7eb6b8b13ffd2a36e1",
+      "name": "python3-3.13.13",
+      "pname": "python313",
+      "rev": "f83fc3c307e74bc5fd5adb7eb6b8b13ffd2a36e1",
+      "rev_count": 1002845,
+      "rev_date": "2026-05-21T09:53:25Z",
+      "scrape_date": "2026-05-23T07:14:39.576499Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "python3-3.13.13",
+      "outputs_to_install": [
+        "out"
+      ],
+      "outputs": {
+        "out": "/nix/store/ygxqin6ydzjfawywqpp5pal8wv6sf5bh-python3-3.13.13"
+      },
+      "system": "aarch64-darwin",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "python313",
+      "broken": false,
+      "derivation": "/nix/store/cz7ch9rip1fkx6qlq9wbw4zzby6lm1ac-python3-3.13.13.drv",
+      "description": "High-level dynamically-typed programming language",
+      "install_id": "python3",
+      "license": "Python-2.0",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=f83fc3c307e74bc5fd5adb7eb6b8b13ffd2a36e1",
+      "name": "python3-3.13.13",
+      "pname": "python313",
+      "rev": "f83fc3c307e74bc5fd5adb7eb6b8b13ffd2a36e1",
+      "rev_count": 1002845,
+      "rev_date": "2026-05-21T09:53:25Z",
+      "scrape_date": "2026-05-23T07:49:44.097547Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "python3-3.13.13",
+      "outputs_to_install": [
+        "out",
+        "out"
+      ],
+      "outputs": {
+        "debug": "/nix/store/wsi1phrz2gvs0xa8gxsq34mbdpr0s6h0-python3-3.13.13-debug",
+        "out": "/nix/store/lqn6mbgzzdrqq2qkwddcmxj9z6amdd86-python3-3.13.13"
+      },
+      "system": "aarch64-linux",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
       "attr_path": "sfw",
       "derivation": "/nix/store/6di0lby6lp6c8rrpay44brjlahwx5jhb-sfw-.drv",
       "description": "Socket Firewall Free - wraps your package manager to prevent installation of malicious packages",
@@ -87,7 +217,7 @@
       "rev": "c434f56ca5e88c56494d506af7a3de683ec1acd6",
       "rev_count": 3,
       "rev_date": "2026-05-24T00:07:51Z",
-      "scrape_date": "2026-05-24T00:22:38.056006751Z",
+      "scrape_date": "2026-05-24T00:38:06.338910Z",
       "stabilities": [
         "unstable"
       ],
@@ -113,7 +243,7 @@
       "rev": "c434f56ca5e88c56494d506af7a3de683ec1acd6",
       "rev_count": 3,
       "rev_date": "2026-05-24T00:07:51Z",
-      "scrape_date": "2026-05-24T00:22:38.056008251Z",
+      "scrape_date": "2026-05-24T00:38:06.338931Z",
       "stabilities": [
         "unstable"
       ],
