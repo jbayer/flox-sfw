@@ -34,7 +34,7 @@ You only need to log in again when:
 - `jbayer/sfw` — the Flox-packaged Socket Firewall (from this repo's published package)
 - `nodejs` — node + npm
 - `pip` — pulls `python3` in as a runtime dependency, used for the PyPI demo
-- `cargo` + `rustc` — used for the crates.io demo
+- `cargo` — used for the crates.io demo (no rustc needed; the registry fetch happens before any build step)
 
 Supported systems: `aarch64-darwin`, `aarch64-linux`.
 
