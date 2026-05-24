@@ -26,9 +26,8 @@ mkdir -p "$CARGO_HOME/bin"
 export PATH="$CARGO_HOME/bin:$PATH"
 
 # pip: the nixpkgs build of pip enforces require-virtualenv, so we
-# auto-create and source a project-scoped venv. That lets users run
-# `pip install <pkg>` directly without first having to set up a venv
-# themselves. Installs land in $VENV_DIR/lib/.../site-packages.
+# auto-create and source a project-scoped venv. That makes `pip install
+# <pkg>` work directly the same way `npm install -g <pkg>` does.
 VENV_DIR="$FLOX_ENV_CACHE/venv"
 if [ ! -d "$VENV_DIR" ]; then
   python3 -m venv "$VENV_DIR"
@@ -37,6 +36,10 @@ if [ -f "$VENV_DIR/bin/activate" ]; then
   # shellcheck disable=SC1091
   source "$VENV_DIR/bin/activate"
 fi
+# flox sets PYTHONPATH to put its own site-packages first in sys.path,
+# which shadows the venv's pip when the venv's pip script runs. Unset
+# it so `pip install` inside the venv actually uses the venv's pip.
+unset PYTHONPATH
 
 # PATH shims so that npm, pip, and cargo are transparently wrapped by
 # sfw - including in non-interactive shells, scripts, and `flox
@@ -49,15 +52,23 @@ mkdir -p "$SFW_SHIMS"
 for cmd in npm pip cargo; do
   cat > "$SFW_SHIMS/$cmd" <<EOF
 #!/usr/bin/env bash
-if [ -n "\${_SFW_WRAPPING:-}" ]; then
-  IFS=:; for d in \$PATH; do
-    [ "\$d" = "$SFW_SHIMS" ] && continue
-    if [ -x "\$d/$cmd" ]; then exec "\$d/$cmd" "\$@"; fi
-  done
+# Resolve the real $cmd by walking PATH and skipping our shim dir.
+# Always exec it via an absolute path so sfw doesn't have to do its
+# own PATH lookup (which may not see the activated venv's pip).
+real=""
+IFS=:; for d in \$PATH; do
+  [ "\$d" = "$SFW_SHIMS" ] && continue
+  if [ -x "\$d/$cmd" ]; then real="\$d/$cmd"; break; fi
+done
+if [ -z "\$real" ]; then
   echo "sfw-shim: real $cmd not found on PATH" >&2; exit 127
 fi
+# Recursion guard: if sfw re-execs us via PATH, just run the real binary.
+if [ -n "\${_SFW_WRAPPING:-}" ]; then
+  exec "\$real" "\$@"
+fi
 export _SFW_WRAPPING=1
-exec sfw $cmd "\$@"
+exec sfw "\$real" "\$@"
 EOF
   chmod +x "$SFW_SHIMS/$cmd"
 done
