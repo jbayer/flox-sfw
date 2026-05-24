@@ -3,9 +3,11 @@
 ## Activating this environment puts `sfw` and `node`/`npm` on PATH.
 ## See README.md in this directory for the typosquat-blocking demo.
 ##
-## WARNING: The demo intentionally attempts to install a real malicious
-## npm package (lodahs). Run only inside a devcontainer or other
-## throwaway sandbox.
+## WARNING: The demo intentionally attempts to install real malicious
+## packages from public registries:
+##   - npm:  lodahs   (typosquat of lodash)
+##   - pypi: fabrice  (typosquat of fabric)
+## Run only inside a devcontainer or other throwaway sandbox.
 ##
 ## NOTE: `jbayer/sfw` is published on FloxHub. The first `flox activate`
 ## fetches it and may require `flox auth login` if you haven't already.
@@ -17,6 +19,8 @@ schema-version = "1.12.0"
 [install]
 sfw.pkg-path = "jbayer/sfw"
 nodejs.pkg-path = "nodejs"
+python3.pkg-path = "python3"
+pip.pkg-path = "python3Packages.pip"
 
 [options]
 systems = [

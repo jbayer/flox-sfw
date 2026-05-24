@@ -4,7 +4,12 @@ A Flox consumption environment that shows how [Socket Firewall Free (sfw)](https
 
 ## Warning
 
-This demo intentionally attempts to install `lodahs`, a real typosquat of `lodash` that has been flagged as malware. **Do not run on your workstation.** Run only inside an isolated, throwaway environment such as a devcontainer, VM, or ephemeral cloud sandbox.
+This demo intentionally attempts to install real malicious packages from public registries:
+
+- npm: **`lodahs`** — typosquat of `lodash`
+- pypi: **`fabrice`** — typosquat of `fabric`
+
+**Do not run on your workstation.** Run only inside an isolated, throwaway environment such as a devcontainer, VM, or ephemeral cloud sandbox.
 
 A ready-to-use devcontainer is included at `sfw-demo/.devcontainer/devcontainer.json` — open this directory in VS Code (or any devcontainer-aware tool) and choose "Reopen in Container" to get an isolated Linux environment with Flox preinstalled.
 
@@ -27,17 +32,18 @@ You only need to log in again when:
 
 - `jbayer/sfw` — the Flox-packaged Socket Firewall (from this repo's published package)
 - `nodejs` — node + npm
+- `python3` + `pip` — for the PyPI demo
 
 Supported systems: `aarch64-darwin`, `aarch64-linux`.
 
-## Demo
+## Demo - npm (`lodahs`)
 
 From a devcontainer:
 
 ```bash
 cd sfw-demo
 flox activate
-mkdir -p /tmp/sfw-demo-project && cd /tmp/sfw-demo-project
+mkdir -p /tmp/sfw-demo-npm && cd /tmp/sfw-demo-npm
 npm init -y
 
 # Baseline (unprotected) - DO NOT RUN OUTSIDE A SANDBOX
@@ -47,12 +53,31 @@ npm init -y
 sfw npm install lodahs
 ```
 
-Expected: `sfw` wraps the package manager's network traffic, recognizes `lodahs` as a known-malicious typosquat of `lodash`, and refuses to let npm fetch it. The unprotected `npm install lodahs` would proceed (and infect the sandbox), which is why you only run it where a wipe-and-redeploy is cheap.
+Expected: `sfw` wraps npm's network traffic, recognizes `lodahs` as a known-malicious typosquat of `lodash`, and refuses to let npm fetch it.
 
-## Contrast - a legitimate install still works
+## Demo - PyPI (`fabrice`)
+
+```bash
+cd sfw-demo
+flox activate
+python3 -m venv /tmp/sfw-demo-venv
+source /tmp/sfw-demo-venv/bin/activate
+
+# Baseline (unprotected) - DO NOT RUN OUTSIDE A SANDBOX
+# pip install fabrice
+
+# With Socket Firewall: should be blocked before any code from
+# fabrice is downloaded or executed
+sfw pip install fabrice
+```
+
+Expected: `sfw` intercepts pip's PyPI traffic and blocks `fabrice` (a typosquat of `fabric` that has been observed exfiltrating AWS credentials).
+
+## Contrast - legitimate installs still work
 
 ```bash
 sfw npm install lodash
+sfw pip install fabric
 ```
 
-That should download `lodash` normally, demonstrating that sfw isn't blocking *all* installs — just ones that match Socket's risk signals.
+Both should download normally, demonstrating that sfw isn't blocking *all* installs — just ones that match Socket's risk signals.
