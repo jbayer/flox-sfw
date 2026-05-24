@@ -63,6 +63,8 @@ On activation the env sets up per-environment install locations inside `$FLOX_EN
 
 The `jbayer/sfw` package itself ships per-ecosystem PATH shims at `$FLOX_ENV/libexec/sfw-shims/{npm,yarn,pnpm,pip,uv,cargo}`. This env prepends that directory to `PATH`, so every call to those tools — interactive prompts, scripts, child processes, `flox activate -- npm ...`, agent-driven invocations — routes through Socket Firewall automatically.
 
+The env also installs a `PROMPT_COMMAND` (bash) / `precmd` (zsh) hook that re-prepends the shim dir on every prompt — so if you `source` a Python venv's `bin/activate` after `flox activate`, the venv's pip doesn't shadow the shim and `pip install <pkg>` inside the venv still routes through `sfw`.
+
 If you ever need the *unshimmed* binary (e.g. for debugging), call it through its absolute path or temporarily remove the shim dir from `PATH`.
 
 ## Demo - npm (`lodahs`)

@@ -38,6 +38,8 @@ The env prepends `$FLOX_ENV/libexec/sfw-shims/` to `PATH` in two places:
 
 When a shim runs it execs `sfw <real-binary> "$@"`. A `_SFW_WRAPPING` env-var sentinel breaks the recursion when sfw itself execs the real command back through the shim.
 
+The env also installs a `PROMPT_COMMAND` (bash) / `precmd` (zsh) hook that re-prepends the shim dir on every prompt. This catches cases where you `source` a script *after* `flox activate` that mutates `PATH` — most commonly a Python venv's `bin/activate`, which prepends `$VIRTUAL_ENV/bin` and would otherwise shadow the shim. With the hook, the shim is restored to the front of `PATH` before your next command runs, so `pip` inside the venv still routes through `sfw`.
+
 ## Activate and use
 
 From a devcontainer (or any host with the relevant tools available on PATH):

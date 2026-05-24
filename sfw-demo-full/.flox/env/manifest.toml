@@ -66,6 +66,44 @@ common = '''
 export PATH="$FLOX_ENV/libexec/sfw-shims:$PATH"
 '''
 
+# Re-prepend the shim dir on every prompt. Without this, sourcing a
+# script that mutates PATH after `flox activate` - most commonly a
+# Python venv's bin/activate - puts the venv's bin (with its own pip)
+# in front of the sfw shim, and pip calls bypass Socket Firewall.
+bash = '''
+_sfw_shim_dir="$FLOX_ENV/libexec/sfw-shims"
+_sfw_ensure_shim_path() {
+  case ":$PATH:" in
+    "$_sfw_shim_dir:"*) return ;;
+  esac
+  local cleaned=":$PATH:"
+  cleaned="${cleaned//:$_sfw_shim_dir:/:}"
+  cleaned="${cleaned#:}"; cleaned="${cleaned%:}"
+  export PATH="$_sfw_shim_dir:$cleaned"
+}
+case ";${PROMPT_COMMAND:-};" in
+  *";_sfw_ensure_shim_path;"*) ;;
+  *) PROMPT_COMMAND="_sfw_ensure_shim_path;${PROMPT_COMMAND:-}" ;;
+esac
+'''
+
+zsh = '''
+_sfw_shim_dir="$FLOX_ENV/libexec/sfw-shims"
+_sfw_ensure_shim_path() {
+  case ":$PATH:" in
+    "$_sfw_shim_dir:"*) return ;;
+  esac
+  local cleaned=":$PATH:"
+  cleaned="${cleaned//:$_sfw_shim_dir:/:}"
+  cleaned="${cleaned#:}"; cleaned="${cleaned%:}"
+  export PATH="$_sfw_shim_dir:$cleaned"
+}
+autoload -Uz add-zsh-hook 2>/dev/null
+if (( $+functions[add-zsh-hook] )); then
+  add-zsh-hook precmd _sfw_ensure_shim_path
+fi
+'''
+
 [options]
 systems = [
   "aarch64-darwin",
