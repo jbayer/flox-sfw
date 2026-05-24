@@ -19,6 +19,14 @@ jobs:
     runs-on: ${{ matrix.runner }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Ensure local branch tracks origin/main
+        run: |
+          git checkout main
+          git branch --set-upstream-to=origin/main main
 
       - name: Install Flox
         uses: flox/install-flox-action@v2
