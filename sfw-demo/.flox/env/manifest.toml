@@ -6,7 +6,10 @@ schema-version = "1.12.0"
 sfw.pkg-path = "jbayer/sfw"
 # nodejs for the `sfw npm install lodahs` demo (see README.md)
 nodejs.pkg-path = "nodejs"
-# pip for the `sfw pip install fabrice` demo (pulls python3 in as a runtime dep)
+# pip for the `sfw pip install fabrice` demo (pulls python3 in as a runtime dep).
+# Note: PyPI often takes down flagged malicious packages quickly, so `fabrice`
+# may already be gone by the time you try it - seeing sfw wrap pip is the
+# demo's main value either way. See README.md for details.
 pip.pkg-path = "python313Packages.pip"
 
 [options]

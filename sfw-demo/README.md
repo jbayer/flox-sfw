@@ -69,6 +69,8 @@ sfw pip install fabrice
 
 Expected: `sfw` intercepts pip's PyPI traffic and blocks `fabrice` (a typosquat of `fabric` that has been observed exfiltrating AWS credentials).
 
+**Heads up:** PyPI removes flagged malicious packages quickly, often within hours of disclosure. By the time you try this, `fabrice` may already be unreachable on PyPI — in which case pip will fail with a normal "no matching distribution" error rather than an sfw block. That's fine for the demo: the point is to see `sfw` wrapping pip and announcing itself as the policy layer in front of your installs. If you want to see a live block, swap `fabrice` for a currently-flagged malicious package from [Socket's advisories](https://socket.dev/) at the time you're running this.
+
 ## Contrast - legitimate installs still work
 
 ```bash
