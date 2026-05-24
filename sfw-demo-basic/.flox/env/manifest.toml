@@ -26,11 +26,14 @@ gum style \
   "$(gum style --bold --foreground 196 'WARNING: recommend running inside a container or sandbox')" \
   "" \
   "$(gum style --italic 'Minimal env: just jbayer/sfw + its shipped shims on PATH.')" \
-  "$(gum style --italic 'Bring your own npm/pip/cargo (system, layered env, etc.) and the shims route them through sfw.')" \
+  "$(gum style --italic 'Bring your own npm/yarn/pnpm/pip/uv/cargo (system, layered env, etc.) and the shims route them through sfw.')" \
   "" \
   "$(gum style --bold 'Examples (require the relevant tool on PATH):')" \
   "  npm install lodahs" \
+  "  yarn add lodahs" \
+  "  pnpm add lodahs" \
   "  pip install fabrice" \
+  "  uv pip install fabrice" \
   "  cargo install rustdecimal" \
   "" \
   "Need pre-installed tooling and writable install targets? See sfw-demo-full."
