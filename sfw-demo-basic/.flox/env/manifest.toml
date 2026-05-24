@@ -1,0 +1,52 @@
+schema-version = "1.12.0"
+
+[install]
+# jbayer/sfw is on FloxHub - first activation may need `flox auth login`;
+# subsequent activations work offline once the package is in /nix/store.
+# It ships PATH shims at $FLOX_ENV/libexec/sfw-shims that route the
+# common package managers (npm, yarn, pnpm, pip, uv, cargo) through sfw
+# transparently when that dir is on PATH.
+sfw.pkg-path = "jbayer/sfw"
+gum.pkg-path = "gum"
+
+[hook]
+on-activate = '''
+# Route any supported package manager on PATH through sfw transparently
+# (shims shipped with the jbayer/sfw package). Also re-prepended in
+# [profile.common] so the interactive shell's PATH (which flox may
+# reset to put $FLOX_ENV/bin first after on-activate runs) still
+# resolves the shimmed names to the shim.
+export PATH="$FLOX_ENV/libexec/sfw-shims:$PATH"
+
+gum style \
+  --border rounded --border-foreground 212 \
+  --padding "1 2" --margin "1 0" \
+  "$(gum style --bold --foreground 212 'Socket Firewall demo - basic (sfw-demo-basic)')" \
+  "" \
+  "$(gum style --bold --foreground 196 'WARNING: recommend running inside a container or sandbox')" \
+  "" \
+  "$(gum style --italic 'Minimal env: just jbayer/sfw + its shipped shims on PATH.')" \
+  "$(gum style --italic 'Bring your own npm/pip/cargo (system, layered env, etc.) and the shims route them through sfw.')" \
+  "" \
+  "$(gum style --bold 'Examples (require the relevant tool on PATH):')" \
+  "  npm install lodahs" \
+  "  pip install fabrice" \
+  "  cargo install rustdecimal" \
+  "" \
+  "Need pre-installed tooling and writable install targets? See sfw-demo-full."
+'''
+
+[profile]
+common = '''
+# Re-prepend the sfw shim dir in the user's interactive shell. flox's
+# interactive activation can put $FLOX_ENV/bin before our hook's PATH
+# changes, which would let plain `npm`/`pip`/`cargo` bypass the shim.
+export PATH="$FLOX_ENV/libexec/sfw-shims:$PATH"
+'''
+
+[options]
+systems = [
+  "aarch64-darwin",
+  "aarch64-linux",
+  "x86_64-linux",
+]

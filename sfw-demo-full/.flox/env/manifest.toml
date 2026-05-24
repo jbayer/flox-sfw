@@ -40,7 +40,7 @@ export PATH="$FLOX_ENV/libexec/sfw-shims:$NPM_CONFIG_PREFIX/bin:$CARGO_HOME/bin:
 gum style \
   --border rounded --border-foreground 212 \
   --padding "1 2" --margin "1 0" \
-  "$(gum style --bold --foreground 212 'Socket Firewall demo (sfw-demo)')" \
+  "$(gum style --bold --foreground 212 'Socket Firewall demo - full (sfw-demo-full)')" \
   "" \
   "$(gum style --bold --foreground 196 'WARNING: recommend running inside a container or sandbox')" \
   "" \

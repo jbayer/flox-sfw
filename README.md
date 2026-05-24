@@ -50,6 +50,18 @@ export PATH="$FLOX_ENV/libexec/sfw-shims:$PATH"
 
 After that, plain `npm install <pkg>` (no `sfw` prefix) routes through Socket Firewall.
 
+> [!TIP]
+> The PATH prepend needs to live in **both** `[hook] on-activate` (so it applies in `flox activate -- cmd`, scripts, and CI) and `[profile.common]` (so it survives Flox's interactive-shell PATH setup, which can re-prepend `$FLOX_ENV/bin` after the hook). The two example demos below set it up both ways.
+
+## Example consumption environments
+
+Two demos in this repo show what installing `jbayer/sfw` looks like in practice:
+
+- [`sfw-demo-basic/`](./sfw-demo-basic) — the minimum: install `sfw`, wire the shipped shims onto `PATH`. Bring your own `npm`/`pip`/`cargo` from system or a layered env. Best starting point if you just want to see the moving parts.
+- [`sfw-demo-full/`](./sfw-demo-full) — pre-installs `nodejs`, `pip`, and `cargo`; sets per-env install targets (`NPM_CONFIG_PREFIX`, `CARGO_HOME`, `PIP_TARGET`) so installs work without sudo or `$HOME` pollution; walks through three blocked-package demos (`lodahs`, `fabrice`, `rustdecimal`).
+
+Both ship a `.devcontainer/devcontainer.json` so you can reopen-in-container for an isolated test environment.
+
 ## Build locally
 
 ```bash

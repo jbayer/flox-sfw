@@ -1,6 +1,8 @@
-# sfw-demo
+# sfw-demo-full
 
-A Flox consumption environment that shows how [Socket Firewall Free (sfw)](https://github.com/SocketDev/sfw-free) blocks the installation of a known-malicious npm package.
+A Flox consumption environment that shows how [Socket Firewall Free (sfw)](https://github.com/SocketDev/sfw-free) wraps `npm`, `pip`, and `cargo` and blocks known-malicious packages.
+
+For a minimal "just install sfw with the shims wired up" environment that doesn't ship its own package managers, see the sibling [`sfw-demo-basic/`](../sfw-demo-basic).
 
 ## Warning
 
@@ -12,7 +14,7 @@ This demo intentionally attempts to install real malicious packages from public 
 
 **Do not run on your workstation.** Run only inside an isolated, throwaway environment such as a devcontainer, VM, or ephemeral cloud sandbox.
 
-A ready-to-use devcontainer is included at `sfw-demo/.devcontainer/devcontainer.json` — open this directory in VS Code (or any devcontainer-aware tool) and choose "Reopen in Container" to get an isolated Linux environment with Flox preinstalled.
+A ready-to-use devcontainer is included at `sfw-demo-full/.devcontainer/devcontainer.json` — open this directory in VS Code (or any devcontainer-aware tool) and choose "Reopen in Container" to get an isolated Linux environment with Flox preinstalled.
 
 ## FloxHub authentication
 
@@ -47,7 +49,7 @@ PyPI and crates.io take flagged malicious packages down quickly — often within
 From a devcontainer:
 
 ```bash
-cd sfw-demo
+cd sfw-demo-full
 flox activate
 ```
 
