@@ -29,7 +29,20 @@ export PATH="$CARGO_HOME/bin:$PATH"
 # auto-create and source a project-scoped venv. That makes `pip install
 # <pkg>` work directly the same way `npm install -g <pkg>` does.
 VENV_DIR="$FLOX_ENV_CACHE/venv"
-if [ ! -d "$VENV_DIR" ]; then
+# Detect and recreate stale venvs: `python3 -m venv` bakes absolute
+# paths into bin/activate and the script shebangs, so a venv created on
+# one machine (or on the host) does not work when seen from another
+# (e.g. a devcontainer with a different mount path).
+venv_ok=0
+if [ -f "$VENV_DIR/bin/activate" ]; then
+  embedded=$(grep -E '^VIRTUAL_ENV=' "$VENV_DIR/bin/activate" \
+    | sed -E 's/^VIRTUAL_ENV="?([^"]*)"?$/\1/')
+  if [ "$embedded" = "$VENV_DIR" ] && [ -x "$VENV_DIR/bin/python3" ]; then
+    venv_ok=1
+  fi
+fi
+if [ "$venv_ok" = "0" ]; then
+  rm -rf "$VENV_DIR"
   python3 -m venv "$VENV_DIR"
 fi
 if [ -f "$VENV_DIR/bin/activate" ]; then
