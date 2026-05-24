@@ -18,6 +18,11 @@ flox auth login
 
 Once the package is in the local `/nix/store`, subsequent activations work offline. You only need to log in again to check for or pull newer versions.
 
+> [!IMPORTANT]
+> `jbayer/sfw` is the **catalog path** for one specific FloxHub account (`jbayer`). FloxHub catalogs are per-account, and a published package is only visible to the publishing account and anyone that account has explicitly granted access. **If you are not `jbayer` (and haven't been granted access to that catalog), `flox install jbayer/sfw` will fail.**
+>
+> `flox auth login` authenticates *you* against FloxHub — it does not grant access to other users' catalogs. To use this packaging yourself, you'll want to [publish under your own FloxHub account](#publish-under-your-own-floxhub-account) (clone, swap a few `jbayer` references for your own org, push a tag).
+
 Then:
 
 ```bash
@@ -84,8 +89,33 @@ The sha256 values can be pulled from `gh release view --repo SocketDev/sfw-free 
 
 The `update-check` workflow runs daily and opens a PR automatically when SocketDev publishes a new release.
 
-## Publishing
+## Publishing (this repo)
 
 The `publish` workflow runs on release tags (`v*`) and publishes for all three supported systems (`aarch64-darwin`, `aarch64-linux`, `x86_64-linux`) to FloxHub under the `jbayer` org.
 
 Requires the `FLOXHUB_TOKEN` repository secret.
+
+## Publish under your own FloxHub account
+
+FloxHub catalogs are per-account; you can't publish to `jbayer/sfw` unless you *are* `jbayer`. If you want this packaging available under your own catalog (e.g. `acme/sfw`), the path is short — clone, swap a handful of `jbayer` references, push a tag.
+
+1. **Create a FloxHub account** if you don't have one, and run `flox auth login` locally.
+2. **Fork or clone this repo** into your own GitHub account/org.
+3. **Replace `jbayer` with your FloxHub org slug** in these files:
+   - `.github/workflows/publish.yml` → the `flox publish --org jbayer sfw` line
+   - `sfw-demo-basic/.flox/env/manifest.toml` → `sfw.pkg-path = "jbayer/sfw"`
+   - `sfw-demo-full/.flox/env/manifest.toml` → `sfw.pkg-path = "jbayer/sfw"`
+   - `README.md` → the install example (optional, for your own docs)
+4. **Add a `FLOXHUB_TOKEN` repo secret** in your fork. Easiest way:
+   ```bash
+   flox auth token | gh secret set FLOXHUB_TOKEN -R <your-gh-org>/flox-sfw
+   ```
+   The token is encrypted at rest by GitHub and never displayed back.
+5. **Tag and push** to trigger the publish workflow:
+   ```bash
+   git tag -a v1.10.0 -m "Publish under <your-org>"
+   git push origin v1.10.0
+   ```
+6. Once the workflow succeeds, anyone using your account (or with access to your catalog) can `flox install <your-org>/sfw`.
+
+The publish workflow already accepts re-publishing the same `vX.Y.Z` with a new build hash, so you can iterate on the manifest and re-tag the same version while testing.
