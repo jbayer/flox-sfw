@@ -7,6 +7,32 @@ sfw.pkg-path = "jbayer/sfw"
 nodejs.pkg-path = "nodejs"
 pip.pkg-path = "python313Packages.pip"
 cargo.pkg-path = "cargo"
+gum.pkg-path = "gum"
+
+[hook]
+on-activate = '''
+gum style \
+  --border rounded --border-foreground 212 \
+  --padding "1 2" --margin "1 0" \
+  "$(gum style --bold --foreground 212 'Socket Firewall demo (sfw-demo)')" \
+  "" \
+  "$(gum style --bold --foreground 196 'WARNING: only run inside a devcontainer or other throwaway sandbox')" \
+  "" \
+  "$(gum style --bold 'npm (live block expected):')" \
+  "  mkdir -p /tmp/sfw-demo-npm && cd /tmp/sfw-demo-npm" \
+  "  npm init -y" \
+  "  sfw npm install lodahs" \
+  "" \
+  "$(gum style --bold 'pip (likely taken down - shows sfw wrapping pip):')" \
+  "  python3 -m venv /tmp/sfw-demo-venv" \
+  "  source /tmp/sfw-demo-venv/bin/activate" \
+  "  sfw pip install fabrice" \
+  "" \
+  "$(gum style --bold 'cargo (likely yanked - shows sfw wrapping cargo):')" \
+  "  sfw cargo install rustdecimal" \
+  "" \
+  "Full walkthrough and contrast cases: README.md"
+'''
 
 [options]
 systems = [

@@ -6,6 +6,9 @@
       "cargo": {
         "pkg-path": "cargo"
       },
+      "gum": {
+        "pkg-path": "gum"
+      },
       "nodejs": {
         "pkg-path": "nodejs"
       },
@@ -15,6 +18,9 @@
       "sfw": {
         "pkg-path": "jbayer/sfw"
       }
+    },
+    "hook": {
+      "on-activate": "gum style \\\n  --border rounded --border-foreground 212 \\\n  --padding \"1 2\" --margin \"1 0\" \\\n  \"$(gum style --bold --foreground 212 'Socket Firewall demo (sfw-demo)')\" \\\n  \"\" \\\n  \"$(gum style --bold --foreground 196 'WARNING: only run inside a devcontainer or other throwaway sandbox')\" \\\n  \"\" \\\n  \"$(gum style --bold 'npm (live block expected):')\" \\\n  \"  mkdir -p /tmp/sfw-demo-npm && cd /tmp/sfw-demo-npm\" \\\n  \"  npm init -y\" \\\n  \"  sfw npm install lodahs\" \\\n  \"\" \\\n  \"$(gum style --bold 'pip (likely taken down - shows sfw wrapping pip):')\" \\\n  \"  python3 -m venv /tmp/sfw-demo-venv\" \\\n  \"  source /tmp/sfw-demo-venv/bin/activate\" \\\n  \"  sfw pip install fabrice\" \\\n  \"\" \\\n  \"$(gum style --bold 'cargo (likely yanked - shows sfw wrapping cargo):')\" \\\n  \"  sfw cargo install rustdecimal\" \\\n  \"\" \\\n  \"Full walkthrough and contrast cases: README.md\"\n"
     },
     "options": {
       "systems": [
@@ -77,6 +83,64 @@
       ],
       "outputs": {
         "out": "/nix/store/f8rxcxfwk1qhazprqnfji401x08xp9dr-cargo-1.95.0"
+      },
+      "system": "aarch64-linux",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "gum",
+      "broken": false,
+      "derivation": "/nix/store/j8ybq6l473j7zinlzgivynnqb9zvl76a-gum-0.17.0.drv",
+      "description": "Tasty Bubble Gum for your shell",
+      "install_id": "gum",
+      "license": "MIT",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=f83fc3c307e74bc5fd5adb7eb6b8b13ffd2a36e1",
+      "name": "gum-0.17.0",
+      "pname": "gum",
+      "rev": "f83fc3c307e74bc5fd5adb7eb6b8b13ffd2a36e1",
+      "rev_count": 1002845,
+      "rev_date": "2026-05-21T09:53:25Z",
+      "scrape_date": "2026-05-23T07:13:58.570460Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "0.17.0",
+      "outputs_to_install": [
+        "out"
+      ],
+      "outputs": {
+        "out": "/nix/store/6jb5frkadampkcmbjynch118cc4smzfj-gum-0.17.0"
+      },
+      "system": "aarch64-darwin",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "gum",
+      "broken": false,
+      "derivation": "/nix/store/3rhl22hpsgrv3p835m8kkmkli1v1swnq-gum-0.17.0.drv",
+      "description": "Tasty Bubble Gum for your shell",
+      "install_id": "gum",
+      "license": "MIT",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=f83fc3c307e74bc5fd5adb7eb6b8b13ffd2a36e1",
+      "name": "gum-0.17.0",
+      "pname": "gum",
+      "rev": "f83fc3c307e74bc5fd5adb7eb6b8b13ffd2a36e1",
+      "rev_count": 1002845,
+      "rev_date": "2026-05-21T09:53:25Z",
+      "scrape_date": "2026-05-23T07:48:48.182472Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "0.17.0",
+      "outputs_to_install": [
+        "out"
+      ],
+      "outputs": {
+        "out": "/nix/store/8p8fi8pl4lb776q2gnby3rd3mcbj5grh-gum-0.17.0"
       },
       "system": "aarch64-linux",
       "group": "toplevel",
@@ -215,7 +279,7 @@
       "rev": "dc3ae3b80270422fa2d1cde7fb643e7a99c83a0e",
       "rev_count": 14,
       "rev_date": "2026-05-24T01:01:15Z",
-      "scrape_date": "2026-05-24T01:08:34.925294Z",
+      "scrape_date": "2026-05-24T13:55:01.140717Z",
       "stabilities": [
         "unstable"
       ],
@@ -241,7 +305,7 @@
       "rev": "dc3ae3b80270422fa2d1cde7fb643e7a99c83a0e",
       "rev_count": 14,
       "rev_date": "2026-05-24T01:01:15Z",
-      "scrape_date": "2026-05-24T01:08:34.925296Z",
+      "scrape_date": "2026-05-24T13:55:01.140721Z",
       "stabilities": [
         "unstable"
       ],
