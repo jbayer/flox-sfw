@@ -26,8 +26,9 @@ mkdir -p "$CARGO_HOME/bin"
 export PATH="$CARGO_HOME/bin:$PATH"
 
 # pip: the nixpkgs build of pip enforces require-virtualenv, so we
-# auto-create and source a project-scoped venv. That makes `pip install
-# <pkg>` work directly the same way `npm install -g <pkg>` does.
+# auto-create and source a project-scoped venv. That lets users run
+# `pip install <pkg>` directly without first having to set up a venv
+# themselves. Installs land in $VENV_DIR/lib/.../site-packages.
 VENV_DIR="$FLOX_ENV_CACHE/venv"
 if [ ! -d "$VENV_DIR" ]; then
   python3 -m venv "$VENV_DIR"
