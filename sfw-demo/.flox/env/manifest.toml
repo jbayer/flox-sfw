@@ -12,16 +12,37 @@ gum.pkg-path = "gum"
 [hook]
 on-activate = '''
 
-# Set up npm global prefix to a location inside the Flox environment cache
-# so that npm installs don't need sudo
+# Per-environment global install locations so npm/pip/cargo "global"
+# installs land inside $FLOX_ENV_CACHE without sudo or polluting $HOME.
+
+# npm global prefix
 export NPM_CONFIG_PREFIX="$FLOX_ENV_CACHE/npm-global"
-mkdir -p "$NPM_CONFIG_PREFIX"
+mkdir -p "$NPM_CONFIG_PREFIX/bin"
 export PATH="$NPM_CONFIG_PREFIX/bin:$PATH"
+
+# cargo home (cargo install <bin> -> $CARGO_HOME/bin)
+export CARGO_HOME="$FLOX_ENV_CACHE/cargo"
+mkdir -p "$CARGO_HOME/bin"
+export PATH="$CARGO_HOME/bin:$PATH"
+
+# pip: the nixpkgs build of pip enforces require-virtualenv, so we
+# auto-create and source a project-scoped venv. That makes `pip install
+# <pkg>` work directly the same way `npm install -g <pkg>` does.
+VENV_DIR="$FLOX_ENV_CACHE/venv"
+if [ ! -d "$VENV_DIR" ]; then
+  python3 -m venv "$VENV_DIR"
+fi
+if [ -f "$VENV_DIR/bin/activate" ]; then
+  # shellcheck disable=SC1091
+  source "$VENV_DIR/bin/activate"
+fi
 
 # PATH shims so that npm, pip, and cargo are transparently wrapped by
 # sfw - including in non-interactive shells, scripts, and `flox
 # activate -- cmd` invocations. The _SFW_WRAPPING sentinel breaks the
-# recursion when sfw itself execs the real package manager.
+# recursion when sfw itself execs the real package manager. Must be
+# prepended LAST so the shim wins over the venv's pip and the
+# cargo/npm bin dirs.
 SFW_SHIMS="$FLOX_ENV_CACHE/sfw-shims"
 mkdir -p "$SFW_SHIMS"
 for cmd in npm pip cargo; do
@@ -49,15 +70,12 @@ gum style \
   "$(gum style --bold --foreground 196 'WARNING: only run inside a devcontainer or other throwaway sandbox')" \
   "" \
   "$(gum style --italic 'npm, pip, and cargo are shimmed - all calls route through sfw automatically.')" \
+  "$(gum style --italic 'Global installs land in $FLOX_ENV_CACHE (npm-global, cargo, venv) - no sudo, no $HOME pollution.')" \
   "" \
   "$(gum style --bold 'npm (live block expected):')" \
-  "  mkdir -p /tmp/sfw-demo-npm && cd /tmp/sfw-demo-npm" \
-  "  npm init -y" \
-  "  npm install lodahs" \
+  "  npm install -g lodahs" \
   "" \
   "$(gum style --bold 'pip (likely taken down - shows sfw wrapping pip):')" \
-  "  python3 -m venv /tmp/sfw-demo-venv" \
-  "  source /tmp/sfw-demo-venv/bin/activate" \
   "  pip install fabrice" \
   "" \
   "$(gum style --bold 'cargo (likely yanked - shows sfw wrapping cargo):')" \

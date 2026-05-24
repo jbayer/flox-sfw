@@ -51,7 +51,13 @@ cd sfw-demo
 flox activate
 ```
 
-On activation the env installs PATH shims for `npm`, `pip`, and `cargo` in `$FLOX_ENV_CACHE/sfw-shims/` and prepends them to `PATH`. The shims `exec sfw <cmd> "$@"`, so every call to those tools — interactive prompts, scripts, child processes, `flox activate -- npm ...`, agent-driven invocations — routes through Socket Firewall automatically. A `_SFW_WRAPPING` sentinel breaks the recursion when sfw itself execs the real package manager.
+On activation the env sets up per-environment "global" install locations inside `$FLOX_ENV_CACHE` so the demo commands work without sudo and without polluting your `$HOME`:
+
+- **npm:** `NPM_CONFIG_PREFIX="$FLOX_ENV_CACHE/npm-global"` — `npm install -g <pkg>` installs here.
+- **cargo:** `CARGO_HOME="$FLOX_ENV_CACHE/cargo"` — `cargo install <bin>` installs to `$CARGO_HOME/bin`.
+- **pip:** an auto-created project venv at `$FLOX_ENV_CACHE/venv` is sourced on activation, so `pip install <pkg>` works directly (the nixpkgs pip enforces `require-virtualenv`).
+
+It also installs PATH shims for `npm`, `pip`, and `cargo` in `$FLOX_ENV_CACHE/sfw-shims/` and prepends them to `PATH` (after the venv source, so the shim wins). The shims `exec sfw <cmd> "$@"`, so every call to those tools — interactive prompts, scripts, child processes, `flox activate -- npm ...`, agent-driven invocations — routes through Socket Firewall automatically. A `_SFW_WRAPPING` sentinel breaks the recursion when sfw itself execs the real package manager.
 
 If you ever need the *unshimmed* binary (e.g. for debugging), call it through its absolute path or temporarily remove the shim dir from `PATH`.
 
@@ -60,20 +66,16 @@ If you ever need the *unshimmed* binary (e.g. for debugging), call it through it
 Copy-paste the whole block:
 
 ```bash
-mkdir -p /tmp/sfw-demo-npm && cd /tmp/sfw-demo-npm
-npm init -y
-npm install lodahs
+npm install -g lodahs
 ```
 
-Expected: `sfw` wraps npm's network traffic, recognizes `lodahs` as a known-malicious typosquat of `lodash`, and refuses to let npm fetch it.
+Expected: `sfw` wraps npm's network traffic, recognizes `lodahs` as a known-malicious typosquat of `lodash`, and refuses to let npm fetch it. The install target is `$NPM_CONFIG_PREFIX/lib/node_modules/`, so nothing leaks into your home directory.
 
 ## Demo - PyPI (`fabrice`)
 
-The nixpkgs build of pip enforces `require-virtualenv`, so the venv steps are not optional — pip will abort before any network call (and sfw will never get to filter) if you skip them. Copy-paste the whole block:
+The auto-activated venv satisfies pip's `require-virtualenv` check, so you can call `pip install` directly:
 
 ```bash
-python3 -m venv /tmp/sfw-demo-venv
-source /tmp/sfw-demo-venv/bin/activate
 pip install fabrice
 ```
 
@@ -84,16 +86,17 @@ Expected: `sfw` intercepts pip's PyPI traffic and announces itself. If `fabrice`
 Copy-paste the whole block:
 
 ```bash
-mkdir -p /tmp/sfw-demo-cargo && cd /tmp/sfw-demo-cargo
 cargo install rustdecimal
 ```
+
+The install target is `$CARGO_HOME/bin/` inside the env cache, not `~/.cargo/bin/`.
 
 Expected: `sfw` intercepts cargo's crates.io traffic and announces itself. `rustdecimal` was yanked from crates.io the day it was disclosed in 2022 (it injected a payload during build), so the most likely outcome today is a "could not find rustdecimal" error from cargo — again, seeing the `sfw` banner in front of cargo is what proves the integration is working (see [the PyPI/cargo note above](#a-note-on-the-pypi-and-cargo-demos)).
 
 ## Contrast - legitimate installs still work
 
 ```bash
-npm install lodash
+npm install -g lodash
 pip install fabric
 cargo install ripgrep
 ```
