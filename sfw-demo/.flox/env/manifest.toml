@@ -31,7 +31,10 @@ export PIP_TARGET="$FLOX_ENV_CACHE/pip-target"
 mkdir -p "$PIP_TARGET"
 
 # Route all supported package managers through sfw transparently
-# (shims shipped with the jbayer/sfw package).
+# (shims shipped with the jbayer/sfw package). Also re-prepended in
+# [profile.common] so the interactive shell's PATH (which flox may
+# reset to put $FLOX_ENV/bin first after on-activate runs) still
+# resolves npm/pip/cargo to the shim.
 export PATH="$FLOX_ENV/libexec/sfw-shims:$NPM_CONFIG_PREFIX/bin:$CARGO_HOME/bin:$PATH"
 
 gum style \
@@ -53,6 +56,14 @@ gum style \
   "  cargo install rustdecimal" \
   "" \
   "Full walkthrough and contrast cases: README.md"
+'''
+
+[profile]
+common = '''
+# Re-prepend the sfw shim dir in the user's interactive shell. flox's
+# interactive activation can put $FLOX_ENV/bin before our hook's PATH
+# changes, which would let plain `npm`/`pip`/`cargo` bypass the shim.
+export PATH="$FLOX_ENV/libexec/sfw-shims:$PATH"
 '''
 
 [options]
