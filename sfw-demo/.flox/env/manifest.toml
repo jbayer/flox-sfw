@@ -11,6 +11,12 @@ nodejs.pkg-path = "nodejs"
 # may already be gone by the time you try it - seeing sfw wrap pip is the
 # demo's main value either way. See README.md for details.
 pip.pkg-path = "python313Packages.pip"
+# cargo + rustc for the `sfw cargo install rustdecimal` demo.
+# Note: crates.io yanks flagged crates fast (rustdecimal was yanked in 2022),
+# so the network call may fail with a yanked/not-found error rather than an
+# sfw block - seeing sfw wrap cargo is still the demo's point. See README.md.
+cargo.pkg-path = "cargo"
+rustc.pkg-path = "rustc"
 
 [options]
 systems = [

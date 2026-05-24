@@ -3,11 +3,17 @@
   "manifest": {
     "schema-version": "1.12.0",
     "install": {
+      "cargo": {
+        "pkg-path": "cargo"
+      },
       "nodejs": {
         "pkg-path": "nodejs"
       },
       "pip": {
         "pkg-path": "python313Packages.pip"
+      },
+      "rustc": {
+        "pkg-path": "rustc"
       },
       "sfw": {
         "pkg-path": "jbayer/sfw"
@@ -21,6 +27,64 @@
     }
   },
   "packages": [
+    {
+      "attr_path": "cargo",
+      "broken": false,
+      "derivation": "/nix/store/04ili1yy79h13xnpghs37y28vns8r69x-cargo-1.95.0.drv",
+      "description": "Downloads your Rust project's dependencies and builds your project",
+      "install_id": "cargo",
+      "license": "[ MIT, Apache-2.0 ]",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=f83fc3c307e74bc5fd5adb7eb6b8b13ffd2a36e1",
+      "name": "cargo-1.95.0",
+      "pname": "cargo",
+      "rev": "f83fc3c307e74bc5fd5adb7eb6b8b13ffd2a36e1",
+      "rev_count": 1002845,
+      "rev_date": "2026-05-21T09:53:25Z",
+      "scrape_date": "2026-05-23T07:13:57.039123Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "1.95.0",
+      "outputs_to_install": [
+        "out"
+      ],
+      "outputs": {
+        "out": "/nix/store/2vdxz4xwplgb5rgfhqr0jr85fd7qqgmb-cargo-1.95.0"
+      },
+      "system": "aarch64-darwin",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "cargo",
+      "broken": false,
+      "derivation": "/nix/store/ddzw6symm08w2hn3nghsi3gmvgyzjphb-cargo-1.95.0.drv",
+      "description": "Downloads your Rust project's dependencies and builds your project",
+      "install_id": "cargo",
+      "license": "[ MIT, Apache-2.0 ]",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=f83fc3c307e74bc5fd5adb7eb6b8b13ffd2a36e1",
+      "name": "cargo-1.95.0",
+      "pname": "cargo",
+      "rev": "f83fc3c307e74bc5fd5adb7eb6b8b13ffd2a36e1",
+      "rev_count": 1002845,
+      "rev_date": "2026-05-21T09:53:25Z",
+      "scrape_date": "2026-05-23T07:48:45.070987Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "1.95.0",
+      "outputs_to_install": [
+        "out"
+      ],
+      "outputs": {
+        "out": "/nix/store/f8rxcxfwk1qhazprqnfji401x08xp9dr-cargo-1.95.0"
+      },
+      "system": "aarch64-linux",
+      "group": "toplevel",
+      "priority": 5
+    },
     {
       "attr_path": "nodejs",
       "broken": false,
@@ -144,6 +208,70 @@
       "priority": 5
     },
     {
+      "attr_path": "rustc",
+      "broken": false,
+      "derivation": "/nix/store/ga3xdqky2y8bx8l0cp34yjpqwnwgfa6m-rustc-wrapper-1.95.0.drv",
+      "description": "Safe, concurrent, practical language (wrapper script)",
+      "install_id": "rustc",
+      "license": "[ MIT, Apache-2.0 ]",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=f83fc3c307e74bc5fd5adb7eb6b8b13ffd2a36e1",
+      "name": "rustc-wrapper-1.95.0",
+      "pname": "rustc",
+      "rev": "f83fc3c307e74bc5fd5adb7eb6b8b13ffd2a36e1",
+      "rev_count": 1002845,
+      "rev_date": "2026-05-21T09:53:25Z",
+      "scrape_date": "2026-05-23T07:15:37.673762Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "1.95.0",
+      "outputs_to_install": [
+        "man",
+        "out"
+      ],
+      "outputs": {
+        "doc": "/nix/store/2wiph2c9mpr0gbgan0ixpnr51pdfhlhj-rustc-wrapper-1.95.0-doc",
+        "man": "/nix/store/zwylsaxwxgmbl38n3n38ym2yp8d4vh3l-rustc-wrapper-1.95.0-man",
+        "out": "/nix/store/z8dhxkw9d2bclp4hj4byyxmbihr8w4an-rustc-wrapper-1.95.0"
+      },
+      "system": "aarch64-darwin",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "rustc",
+      "broken": false,
+      "derivation": "/nix/store/31cmzg65yvkdiy8jq66q84mxkbfqvagx-rustc-wrapper-1.95.0.drv",
+      "description": "Safe, concurrent, practical language (wrapper script)",
+      "install_id": "rustc",
+      "license": "[ MIT, Apache-2.0 ]",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=f83fc3c307e74bc5fd5adb7eb6b8b13ffd2a36e1",
+      "name": "rustc-wrapper-1.95.0",
+      "pname": "rustc",
+      "rev": "f83fc3c307e74bc5fd5adb7eb6b8b13ffd2a36e1",
+      "rev_count": 1002845,
+      "rev_date": "2026-05-21T09:53:25Z",
+      "scrape_date": "2026-05-23T07:50:50.299598Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "1.95.0",
+      "outputs_to_install": [
+        "man",
+        "out"
+      ],
+      "outputs": {
+        "doc": "/nix/store/wqzfi80f80r689n3knjqsn31zqz68z4q-rustc-wrapper-1.95.0-doc",
+        "man": "/nix/store/p3azdhlb0nk5kz1wqc22v7srwsb37m24-rustc-wrapper-1.95.0-man",
+        "out": "/nix/store/nh052ln9q9r24p3rb6zxiqqjy4anxa56-rustc-wrapper-1.95.0"
+      },
+      "system": "aarch64-linux",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
       "attr_path": "sfw",
       "derivation": "/nix/store/6di0lby6lp6c8rrpay44brjlahwx5jhb-sfw-.drv",
       "description": "Socket Firewall Free - wraps your package manager to prevent installation of malicious packages",
@@ -154,7 +282,7 @@
       "rev": "c434f56ca5e88c56494d506af7a3de683ec1acd6",
       "rev_count": 3,
       "rev_date": "2026-05-24T00:07:51Z",
-      "scrape_date": "2026-05-24T00:38:06.338910Z",
+      "scrape_date": "2026-05-24T00:52:52.527047Z",
       "stabilities": [
         "unstable"
       ],
@@ -180,7 +308,7 @@
       "rev": "c434f56ca5e88c56494d506af7a3de683ec1acd6",
       "rev_count": 3,
       "rev_date": "2026-05-24T00:07:51Z",
-      "scrape_date": "2026-05-24T00:38:06.338931Z",
+      "scrape_date": "2026-05-24T00:52:52.527058Z",
       "stabilities": [
         "unstable"
       ],
