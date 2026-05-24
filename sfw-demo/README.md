@@ -36,7 +36,7 @@ You only need to log in again when:
 - `pip` — pulls `python3` in as a runtime dependency, used for the PyPI demo
 - `cargo` — used for the crates.io demo (no rustc needed; the registry fetch happens before any build step)
 
-Supported systems: `aarch64-darwin`, `aarch64-linux`.
+Supported systems: `aarch64-darwin`, `aarch64-linux`, `x86_64-linux`.
 
 ## A note on the PyPI and cargo demos
 

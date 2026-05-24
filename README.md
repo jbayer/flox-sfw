@@ -2,7 +2,7 @@
 
 Flox packaging of [Socket Firewall Free (sfw)](https://github.com/SocketDev/sfw-free) — a wrapper that filters network traffic for package managers to block installation of malicious packages.
 
-This repo repackages SocketDev's prebuilt binaries as a Flox manifest build, publishable to FloxHub for `aarch64-darwin` and `aarch64-linux`.
+This repo repackages SocketDev's prebuilt binaries as a Flox manifest build, publishable to FloxHub for `aarch64-darwin`, `aarch64-linux`, and `x86_64-linux`.
 
 ## Install
 
@@ -60,11 +60,13 @@ flox build sfw
 
 ## Bumping the upstream version
 
-Edit `.flox/env/manifest.toml` and update three vars:
+Edit `.flox/env/manifest.toml` and update:
 
-- `SFW_VERSION`
-- `SFW_SHA256_DARWIN_ARM64`
-- `SFW_SHA256_LINUX_ARM64`
+- `[build.sfw] version`
+- `[vars] SFW_VERSION`
+- `[vars] SFW_SHA256_DARWIN_ARM64`
+- `[vars] SFW_SHA256_LINUX_ARM64`
+- `[vars] SFW_SHA256_LINUX_X86_64`
 
 The sha256 values can be pulled from `gh release view --repo SocketDev/sfw-free vX.Y.Z --json assets`.
 
@@ -72,6 +74,6 @@ The `update-check` workflow runs daily and opens a PR automatically when SocketD
 
 ## Publishing
 
-The `publish` workflow runs on release tags (`v*`) and publishes for both supported systems to FloxHub under the `jbayer` org.
+The `publish` workflow runs on release tags (`v*`) and publishes for all three supported systems (`aarch64-darwin`, `aarch64-linux`, `x86_64-linux`) to FloxHub under the `jbayer` org.
 
 Requires the `FLOXHUB_TOKEN` repository secret.
