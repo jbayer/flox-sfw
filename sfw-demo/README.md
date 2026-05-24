@@ -36,20 +36,22 @@ You only need to log in again when:
 
 Supported systems: `aarch64-darwin`, `aarch64-linux`.
 
-## Demo - npm (`lodahs`)
+## Activate the environment
 
 From a devcontainer:
 
 ```bash
 cd sfw-demo
 flox activate
+```
+
+## Demo - npm (`lodahs`)
+
+Copy-paste the whole block:
+
+```bash
 mkdir -p /tmp/sfw-demo-npm && cd /tmp/sfw-demo-npm
 npm init -y
-
-# Baseline (unprotected) - DO NOT RUN OUTSIDE A SANDBOX
-# npm install lodahs
-
-# With Socket Firewall: the typosquat should be blocked before install
 sfw npm install lodahs
 ```
 
@@ -57,17 +59,11 @@ Expected: `sfw` wraps npm's network traffic, recognizes `lodahs` as a known-mali
 
 ## Demo - PyPI (`fabrice`)
 
+The nixpkgs build of pip enforces `require-virtualenv`, so the venv steps are not optional — pip will abort before any network call (and sfw will never get to filter) if you skip them. Copy-paste the whole block:
+
 ```bash
-cd sfw-demo
-flox activate
 python3 -m venv /tmp/sfw-demo-venv
 source /tmp/sfw-demo-venv/bin/activate
-
-# Baseline (unprotected) - DO NOT RUN OUTSIDE A SANDBOX
-# pip install fabrice
-
-# With Socket Firewall: should be blocked before any code from
-# fabrice is downloaded or executed
 sfw pip install fabrice
 ```
 
@@ -81,3 +77,7 @@ sfw pip install fabric
 ```
 
 Both should download normally, demonstrating that sfw isn't blocking *all* installs — just ones that match Socket's risk signals.
+
+## Baseline (unprotected) — DO NOT RUN OUTSIDE A SANDBOX
+
+Just so you can compare, the unprotected versions are `npm install lodahs` and `pip install fabrice`. These will successfully fetch and execute the malicious packages. Only run them in a throwaway environment you intend to discard.
