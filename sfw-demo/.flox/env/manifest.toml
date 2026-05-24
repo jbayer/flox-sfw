@@ -39,7 +39,7 @@ gum style \
   --padding "1 2" --margin "1 0" \
   "$(gum style --bold --foreground 212 'Socket Firewall demo (sfw-demo)')" \
   "" \
-  "$(gum style --bold --foreground 196 'WARNING: only run inside a devcontainer or other throwaway sandbox')" \
+  "$(gum style --bold --foreground 196 'WARNING: recommend running inside a container or sandbox')" \
   "" \
   "$(gum style --italic 'npm, pip, and cargo route through sfw automatically via the shipped shims.')" \
   "" \
