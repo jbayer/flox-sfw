@@ -206,25 +206,25 @@
     },
     {
       "attr_path": "sfw",
-      "derivation": "/nix/store/6di0lby6lp6c8rrpay44brjlahwx5jhb-sfw-.drv",
+      "derivation": "/nix/store/58kqlwlhlcn4rnh0nkwbxbk88bxzyy7v-sfw-1.10.0.drv",
       "description": "Socket Firewall Free - wraps your package manager to prevent installation of malicious packages",
       "install_id": "sfw",
-      "locked_url": "https://github.com/jbayer/flox-sfw?rev=c434f56ca5e88c56494d506af7a3de683ec1acd6",
-      "name": "sfw-",
+      "locked_url": "https://github.com/jbayer/flox-sfw?rev=dc3ae3b80270422fa2d1cde7fb643e7a99c83a0e",
+      "name": "sfw-1.10.0",
       "pname": "sfw",
-      "rev": "c434f56ca5e88c56494d506af7a3de683ec1acd6",
-      "rev_count": 3,
-      "rev_date": "2026-05-24T00:07:51Z",
-      "scrape_date": "2026-05-24T00:52:52.527047Z",
+      "rev": "dc3ae3b80270422fa2d1cde7fb643e7a99c83a0e",
+      "rev_count": 14,
+      "rev_date": "2026-05-24T01:01:15Z",
+      "scrape_date": "2026-05-24T01:08:34.925294Z",
       "stabilities": [
         "unstable"
       ],
-      "version": "",
+      "version": "1.10.0",
       "outputs_to_install": [
         "out"
       ],
       "outputs": {
-        "out": "/nix/store/vcw9b4yr03a5c2f6d70sq75w9505ldlj-sfw-"
+        "out": "/nix/store/xa417gq5903fb7n2mvkg7agva0cg0rjm-sfw-1.10.0"
       },
       "system": "aarch64-darwin",
       "group": "toplevel",
@@ -232,25 +232,25 @@
     },
     {
       "attr_path": "sfw",
-      "derivation": "/nix/store/a2v3g7h5pw0mdva3wzvff248nbqyn5z3-sfw-.drv",
+      "derivation": "/nix/store/v3qp62hzgl5c8yq74dxjgihyy7l9jkzs-sfw-1.10.0.drv",
       "description": "Socket Firewall Free - wraps your package manager to prevent installation of malicious packages",
       "install_id": "sfw",
-      "locked_url": "https://github.com/jbayer/flox-sfw?rev=c434f56ca5e88c56494d506af7a3de683ec1acd6",
-      "name": "sfw-",
+      "locked_url": "https://github.com/jbayer/flox-sfw?rev=dc3ae3b80270422fa2d1cde7fb643e7a99c83a0e",
+      "name": "sfw-1.10.0",
       "pname": "sfw",
-      "rev": "c434f56ca5e88c56494d506af7a3de683ec1acd6",
-      "rev_count": 3,
-      "rev_date": "2026-05-24T00:07:51Z",
-      "scrape_date": "2026-05-24T00:52:52.527058Z",
+      "rev": "dc3ae3b80270422fa2d1cde7fb643e7a99c83a0e",
+      "rev_count": 14,
+      "rev_date": "2026-05-24T01:01:15Z",
+      "scrape_date": "2026-05-24T01:08:34.925296Z",
       "stabilities": [
         "unstable"
       ],
-      "version": "",
+      "version": "1.10.0",
       "outputs_to_install": [
         "out"
       ],
       "outputs": {
-        "out": "/nix/store/gf89blbv2530p6w58m6h3s0ciq3d3s5f-sfw-"
+        "out": "/nix/store/idqam0a5i6rrvwv7il10zyrd5malrc2p-sfw-1.10.0"
       },
       "system": "aarch64-linux",
       "group": "toplevel",
