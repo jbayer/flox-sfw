@@ -66,10 +66,12 @@ If you ever need the *unshimmed* binary (e.g. for debugging), call it through it
 Copy-paste the whole block:
 
 ```bash
-npm install -g lodahs
+npm install lodahs
 ```
 
-Expected: `sfw` wraps npm's network traffic, recognizes `lodahs` as a known-malicious typosquat of `lodash`, and refuses to let npm fetch it. The install target is `$NPM_CONFIG_PREFIX/lib/node_modules/`, so nothing leaks into your home directory.
+Expected: `sfw` wraps npm's network traffic, recognizes `lodahs` as a known-malicious typosquat of `lodash`, and refuses to let npm fetch it.
+
+(If you instead want to try `npm install -g lodahs`, the env's `NPM_CONFIG_PREFIX` setup ensures the global install target is `$FLOX_ENV_CACHE/npm-global/` — no sudo, no `$HOME` pollution.)
 
 ## Demo - PyPI (`fabrice`)
 
@@ -96,7 +98,7 @@ Expected: `sfw` intercepts cargo's crates.io traffic and announces itself. `rust
 ## Contrast - legitimate installs still work
 
 ```bash
-npm install -g lodash
+npm install lodash
 pip install fabric
 cargo install ripgrep
 ```

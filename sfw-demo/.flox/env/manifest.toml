@@ -73,7 +73,7 @@ gum style \
   "$(gum style --italic 'Global installs land in $FLOX_ENV_CACHE (npm-global, cargo, venv) - no sudo, no $HOME pollution.')" \
   "" \
   "$(gum style --bold 'npm (live block expected):')" \
-  "  npm install -g lodahs" \
+  "  npm install lodahs" \
   "" \
   "$(gum style --bold 'pip (likely taken down - shows sfw wrapping pip):')" \
   "  pip install fabrice" \
