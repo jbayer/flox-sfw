@@ -52,6 +52,39 @@ command = '''
   mkdir -p "$out/bin"
   mv sfw "$out/bin/sfw"
   chmod +x "$out/bin/sfw"
+
+  # Per-ecosystem PATH shims. Consumers opt in by prepending
+  # $FLOX_ENV/libexec/sfw-shims to their PATH (e.g. in [hook] on-activate),
+  # which transparently routes each package-manager call through `sfw`
+  # in interactive shells, scripts, sub-processes, and CI alike.
+  mkdir -p "$out/libexec/sfw-shims"
+  cat > "$out/libexec/sfw-shims/sfw-shim" <<'SHIM_EOF'
+#!/usr/bin/env bash
+# Routes calls through `sfw` for Socket Firewall protection. Multiple
+# package-manager names are symlinked to this single script; basename
+# is used to dispatch to the right real binary.
+shim_dir="$(cd "$(dirname "$0")" && pwd)"
+cmd_name="$(basename "$0")"
+real=""
+IFS=:; for d in $PATH; do
+  [ "$d" = "$shim_dir" ] && continue
+  if [ -x "$d/$cmd_name" ]; then real="$d/$cmd_name"; break; fi
+done
+if [ -z "$real" ]; then
+  echo "sfw-shim: real $cmd_name not found on PATH" >&2
+  exit 127
+fi
+# Recursion guard: if sfw re-execs us via PATH, just run the real binary.
+if [ -n "${_SFW_WRAPPING:-}" ]; then
+  exec "$real" "$@"
+fi
+export _SFW_WRAPPING=1
+exec sfw "$real" "$@"
+SHIM_EOF
+  chmod +x "$out/libexec/sfw-shims/sfw-shim"
+  for cmd in npm yarn pnpm pip uv cargo; do
+    ln -s sfw-shim "$out/libexec/sfw-shims/$cmd"
+  done
 '''
 
 [options]

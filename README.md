@@ -25,6 +25,31 @@ sfw npm install
 sfw pip install requests
 ```
 
+## Transparent shims (opt-in)
+
+The package also ships per-ecosystem PATH shims at `$FLOX_ENV/libexec/sfw-shims/` for the package managers Socket Firewall supports:
+
+- `npm`, `yarn`, `pnpm`
+- `pip`, `uv`
+- `cargo`
+
+Each shim resolves the real binary on `PATH` and execs `sfw <real-bin> "$@"`, so calls are routed through Socket Firewall transparently — including in scripts, child processes, `flox activate -- <cmd>`, CI, and agent-driven invocations where a shell alias wouldn't help. A `_SFW_WRAPPING` env-var sentinel breaks the recursion when sfw itself execs the real command.
+
+Opt in by prepending the shim dir to `PATH` in your `[hook] on-activate`:
+
+```toml
+[install]
+sfw.pkg-path = "jbayer/sfw"
+nodejs.pkg-path = "nodejs"
+
+[hook]
+on-activate = '''
+export PATH="$FLOX_ENV/libexec/sfw-shims:$PATH"
+'''
+```
+
+After that, plain `npm install <pkg>` (no `sfw` prefix) routes through Socket Firewall.
+
 ## Build locally
 
 ```bash
