@@ -13,7 +13,7 @@ jobs:
   check:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Determine current and latest versions
         id: versions
@@ -68,7 +68,7 @@ jobs:
 
       - name: Open PR
         if: steps.versions.outputs.up_to_date == 'false'
-        uses: peter-evans/create-pull-request@v6
+        uses: peter-evans/create-pull-request@v8
         with:
           branch: bump/sfw-${{ steps.versions.outputs.latest }}
           title: "Bump sfw to v${{ steps.versions.outputs.latest }}"
