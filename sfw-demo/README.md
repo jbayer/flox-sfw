@@ -55,9 +55,9 @@ On activation the env sets up per-environment "global" install locations inside 
 
 - **npm:** `NPM_CONFIG_PREFIX="$FLOX_ENV_CACHE/npm-global"` — `npm install -g <pkg>` installs here.
 - **cargo:** `CARGO_HOME="$FLOX_ENV_CACHE/cargo"` — `cargo install <bin>` installs to `$CARGO_HOME/bin`.
-- **pip:** an auto-created project venv at `$FLOX_ENV_CACHE/venv` is sourced on activation, so `pip install <pkg>` works directly (the nixpkgs pip enforces `require-virtualenv`).
+- **pip:** the nixpkgs python disables all the usual install paths — `require-virtualenv = true` in its site config, PEP 668 `EXTERNALLY-MANAGED` marker, and `ENABLE_USER_SITE = False` (so `--user` is rejected too). The only mode that works without fighting nix is `pip install --target=<dir>`. The env sets `PIP_REQUIRE_VIRTUALENV=false`, `PIP_BREAK_SYSTEM_PACKAGES=true`, and `PIP_TARGET="$FLOX_ENV_CACHE/pip-target"` so `pip install <pkg>` runs straight through. (For the demo, `sfw` blocks before pip ever writes anything — the install target doesn't matter.)
 
-It also installs PATH shims for `npm`, `pip`, and `cargo` in `$FLOX_ENV_CACHE/sfw-shims/` and prepends them to `PATH` (after the venv source, so the shim wins). The shims `exec sfw <cmd> "$@"`, so every call to those tools — interactive prompts, scripts, child processes, `flox activate -- npm ...`, agent-driven invocations — routes through Socket Firewall automatically. A `_SFW_WRAPPING` sentinel breaks the recursion when sfw itself execs the real package manager.
+It also installs PATH shims for `npm`, `pip`, and `cargo` in `$FLOX_ENV_CACHE/sfw-shims/` and prepends them to `PATH`. The shims pre-resolve the real binary's absolute path and `exec sfw <abs-path> "$@"`, so every call to those tools — interactive prompts, scripts, child processes, `flox activate -- npm ...`, agent-driven invocations — routes through Socket Firewall automatically. A `_SFW_WRAPPING` sentinel breaks the recursion when sfw itself re-execs through the shim.
 
 If you ever need the *unshimmed* binary (e.g. for debugging), call it through its absolute path or temporarily remove the shim dir from `PATH`.
 
@@ -75,7 +75,7 @@ Expected: `sfw` wraps npm's network traffic, recognizes `lodahs` as a known-mali
 
 ## Demo - PyPI (`fabrice`)
 
-The auto-activated venv satisfies pip's `require-virtualenv` check, so you can call `pip install` directly:
+The env-var overrides described above let you call `pip install` directly (no venv needed):
 
 ```bash
 pip install fabrice
