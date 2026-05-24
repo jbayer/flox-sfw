@@ -1,6 +1,6 @@
 # sfw-demo-full
 
-A Flox consumption environment that shows how [Socket Firewall Free (sfw)](https://github.com/SocketDev/sfw-free) wraps `npm`, `pip`, and `cargo` and blocks known-malicious packages.
+A Flox consumption environment that shows how [Socket Firewall Free (sfw)](https://github.com/SocketDev/sfw-free) wraps `npm`, `pip`, and `cargo` and blocks known-malicious packages. The shipped shims cover all six supported package managers (`npm`, `yarn`, `pnpm`, `pip`, `uv`, `cargo`) — this demo just exercises three of them with the tooling it pre-installs.
 
 For a minimal "just install sfw with the shims wired up" environment that doesn't ship its own package managers, see the sibling [`sfw-demo-basic/`](../sfw-demo-basic).
 
@@ -37,6 +37,8 @@ You only need to log in again when:
 - `nodejs` — node + npm
 - `pip` — pulls `python3` in as a runtime dependency, used for the PyPI demo
 - `cargo` — used for the crates.io demo (no rustc needed; the registry fetch happens before any build step)
+
+`jbayer/sfw` itself ships shims for all six supported package managers: `npm`, `yarn`, `pnpm`, `pip`, `uv`, `cargo`. If you add `yarn`/`pnpm`/`uv` to the manifest (or layer in another env that provides them), they'll route through `sfw` the same way.
 
 Supported systems: `aarch64-darwin`, `aarch64-linux`, `x86_64-linux`.
 
