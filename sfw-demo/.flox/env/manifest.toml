@@ -4,18 +4,9 @@ schema-version = "1.12.0"
 # jbayer/sfw is on FloxHub - first activation may need `flox auth login`;
 # subsequent activations work offline once the package is in /nix/store.
 sfw.pkg-path = "jbayer/sfw"
-# nodejs for the `sfw npm install lodahs` demo (see README.md)
 nodejs.pkg-path = "nodejs"
-# pip for the `sfw pip install fabrice` demo (pulls python3 in as a runtime dep).
 pip.pkg-path = "python313Packages.pip"
-# cargo for the `sfw cargo install rustdecimal` demo (no rustc needed:
-# the network fetch from crates.io happens before any build step).
 cargo.pkg-path = "cargo"
-# Note for the pip and cargo demos: PyPI and crates.io take flagged malicious
-# packages down within hours of disclosure, so `fabrice` and `rustdecimal` may
-# already be unreachable. For those two demos, success means "sfw is correctly
-# wrapping pip / cargo" - a live block is best shown by the npm `lodahs` case
-# or a currently-flagged package from socket.dev/advisories. See README.md.
 
 [options]
 systems = [
