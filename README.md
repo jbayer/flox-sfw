@@ -58,6 +58,32 @@ After that, plain `npm install <pkg>` (no `sfw` prefix) routes through Socket Fi
 > [!TIP]
 > The PATH prepend needs to live in **both** `[hook] on-activate` (so it applies in `flox activate -- cmd`, scripts, and CI) and `[profile.common]` (so it survives Flox's interactive-shell PATH setup, which can re-prepend `$FLOX_ENV/bin` after the hook). The two example demos below set it up both ways.
 
+### Sourceable shell helpers
+
+For bash and zsh users, the package also ships activation helpers at `$FLOX_ENV/libexec/sfw-shims/activate.{bash,zsh}` that handle both the initial `PATH` prepend AND install a prompt hook (`PROMPT_COMMAND` / `precmd`) to **re-prepend the shim dir on every prompt**. That last part matters when you `source` a script *after* `flox activate` that mutates `PATH` — most commonly a Python venv's `bin/activate`. Without the prompt hook, the venv's `bin/pip` lands in front of the sfw shim and `pip` calls inside the venv bypass Socket Firewall.
+
+Recommended consumer profile:
+
+```toml
+[hook]
+on-activate = '''
+export PATH="$FLOX_ENV/libexec/sfw-shims:$PATH"   # covers `flox activate -- cmd`
+'''
+
+[profile]
+common = '''
+export PATH="$FLOX_ENV/libexec/sfw-shims:$PATH"   # fallback for shells without specific profiles (fish, sh)
+'''
+bash = '''
+source "$FLOX_ENV/libexec/sfw-shims/activate.bash"
+'''
+zsh = '''
+source "$FLOX_ENV/libexec/sfw-shims/activate.zsh"
+'''
+```
+
+Both demos in this repo use this exact pattern.
+
 ## Example consumption environments
 
 Two demos in this repo show what installing `jbayer/sfw` looks like in practice:
