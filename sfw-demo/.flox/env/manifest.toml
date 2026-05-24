@@ -11,6 +11,36 @@ gum.pkg-path = "gum"
 
 [hook]
 on-activate = '''
+
+# Set up npm global prefix to a location inside the Flox environment cache
+# so that npm installs don't need sudo
+export NPM_CONFIG_PREFIX="$FLOX_ENV_CACHE/npm-global"
+mkdir -p "$NPM_CONFIG_PREFIX"
+export PATH="$NPM_CONFIG_PREFIX/bin:$PATH"
+
+# PATH shims so that npm, pip, and cargo are transparently wrapped by
+# sfw - including in non-interactive shells, scripts, and `flox
+# activate -- cmd` invocations. The _SFW_WRAPPING sentinel breaks the
+# recursion when sfw itself execs the real package manager.
+SFW_SHIMS="$FLOX_ENV_CACHE/sfw-shims"
+mkdir -p "$SFW_SHIMS"
+for cmd in npm pip cargo; do
+  cat > "$SFW_SHIMS/$cmd" <<EOF
+#!/usr/bin/env bash
+if [ -n "\${_SFW_WRAPPING:-}" ]; then
+  IFS=:; for d in \$PATH; do
+    [ "\$d" = "$SFW_SHIMS" ] && continue
+    if [ -x "\$d/$cmd" ]; then exec "\$d/$cmd" "\$@"; fi
+  done
+  echo "sfw-shim: real $cmd not found on PATH" >&2; exit 127
+fi
+export _SFW_WRAPPING=1
+exec sfw $cmd "\$@"
+EOF
+  chmod +x "$SFW_SHIMS/$cmd"
+done
+export PATH="$SFW_SHIMS:$PATH"
+
 gum style \
   --border rounded --border-foreground 212 \
   --padding "1 2" --margin "1 0" \
@@ -18,18 +48,20 @@ gum style \
   "" \
   "$(gum style --bold --foreground 196 'WARNING: only run inside a devcontainer or other throwaway sandbox')" \
   "" \
+  "$(gum style --italic 'npm, pip, and cargo are shimmed - all calls route through sfw automatically.')" \
+  "" \
   "$(gum style --bold 'npm (live block expected):')" \
   "  mkdir -p /tmp/sfw-demo-npm && cd /tmp/sfw-demo-npm" \
   "  npm init -y" \
-  "  sfw npm install lodahs" \
+  "  npm install lodahs" \
   "" \
   "$(gum style --bold 'pip (likely taken down - shows sfw wrapping pip):')" \
   "  python3 -m venv /tmp/sfw-demo-venv" \
   "  source /tmp/sfw-demo-venv/bin/activate" \
-  "  sfw pip install fabrice" \
+  "  pip install fabrice" \
   "" \
   "$(gum style --bold 'cargo (likely yanked - shows sfw wrapping cargo):')" \
-  "  sfw cargo install rustdecimal" \
+  "  cargo install rustdecimal" \
   "" \
   "Full walkthrough and contrast cases: README.md"
 '''

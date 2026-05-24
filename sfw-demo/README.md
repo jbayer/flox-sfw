@@ -51,6 +51,10 @@ cd sfw-demo
 flox activate
 ```
 
+On activation the env installs PATH shims for `npm`, `pip`, and `cargo` in `$FLOX_ENV_CACHE/sfw-shims/` and prepends them to `PATH`. The shims `exec sfw <cmd> "$@"`, so every call to those tools — interactive prompts, scripts, child processes, `flox activate -- npm ...`, agent-driven invocations — routes through Socket Firewall automatically. A `_SFW_WRAPPING` sentinel breaks the recursion when sfw itself execs the real package manager.
+
+If you ever need the *unshimmed* binary (e.g. for debugging), call it through its absolute path or temporarily remove the shim dir from `PATH`.
+
 ## Demo - npm (`lodahs`)
 
 Copy-paste the whole block:
@@ -58,7 +62,7 @@ Copy-paste the whole block:
 ```bash
 mkdir -p /tmp/sfw-demo-npm && cd /tmp/sfw-demo-npm
 npm init -y
-sfw npm install lodahs
+npm install lodahs
 ```
 
 Expected: `sfw` wraps npm's network traffic, recognizes `lodahs` as a known-malicious typosquat of `lodash`, and refuses to let npm fetch it.
@@ -70,7 +74,7 @@ The nixpkgs build of pip enforces `require-virtualenv`, so the venv steps are no
 ```bash
 python3 -m venv /tmp/sfw-demo-venv
 source /tmp/sfw-demo-venv/bin/activate
-sfw pip install fabrice
+pip install fabrice
 ```
 
 Expected: `sfw` intercepts pip's PyPI traffic and announces itself. If `fabrice` is still published, sfw blocks it; if PyPI has already taken it down, pip exits with a "no matching distribution" error — either way, seeing the `sfw` banner in front of pip is the demo's point (see [the PyPI/cargo note above](#a-note-on-the-pypi-and-cargo-demos)). `fabrice` is a typosquat of `fabric` that has been observed exfiltrating AWS credentials.
@@ -81,7 +85,7 @@ Copy-paste the whole block:
 
 ```bash
 mkdir -p /tmp/sfw-demo-cargo && cd /tmp/sfw-demo-cargo
-sfw cargo install rustdecimal
+cargo install rustdecimal
 ```
 
 Expected: `sfw` intercepts cargo's crates.io traffic and announces itself. `rustdecimal` was yanked from crates.io the day it was disclosed in 2022 (it injected a payload during build), so the most likely outcome today is a "could not find rustdecimal" error from cargo — again, seeing the `sfw` banner in front of cargo is what proves the integration is working (see [the PyPI/cargo note above](#a-note-on-the-pypi-and-cargo-demos)).
@@ -89,13 +93,13 @@ Expected: `sfw` intercepts cargo's crates.io traffic and announces itself. `rust
 ## Contrast - legitimate installs still work
 
 ```bash
-sfw npm install lodash
-sfw pip install fabric
-sfw cargo install ripgrep
+npm install lodash
+pip install fabric
+cargo install ripgrep
 ```
 
 All three should download normally, demonstrating that sfw isn't blocking *all* installs — just ones that match Socket's risk signals.
 
 ## Baseline (unprotected) — DO NOT RUN OUTSIDE A SANDBOX
 
-Just so you can compare, the unprotected versions are `npm install lodahs`, `pip install fabrice`, and `cargo install rustdecimal`. These will (if still available upstream) successfully fetch and in some cases execute the malicious packages. Only run them in a throwaway environment you intend to discard.
+The shims are scoped to this Flox environment. To compare against the unprotected behaviour, exit `flox activate` (or call the binaries by absolute path) and re-run `npm install lodahs` / `pip install fabrice` / `cargo install rustdecimal`. These will (if still available upstream) successfully fetch and in some cases execute the malicious packages. Only run them in a throwaway environment you intend to discard.
