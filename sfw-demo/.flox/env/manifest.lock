@@ -20,7 +20,7 @@
       }
     },
     "hook": {
-      "on-activate": "\n# Per-environment global install locations so npm/pip/cargo \"global\"\n# installs land inside $FLOX_ENV_CACHE without sudo or polluting $HOME.\n\n# npm global prefix\nexport NPM_CONFIG_PREFIX=\"$FLOX_ENV_CACHE/npm-global\"\nmkdir -p \"$NPM_CONFIG_PREFIX/bin\"\nexport PATH=\"$NPM_CONFIG_PREFIX/bin:$PATH\"\n\n# cargo home (cargo install <bin> -> $CARGO_HOME/bin)\nexport CARGO_HOME=\"$FLOX_ENV_CACHE/cargo\"\nmkdir -p \"$CARGO_HOME/bin\"\nexport PATH=\"$CARGO_HOME/bin:$PATH\"\n\n# pip: the nixpkgs build of pip enforces require-virtualenv via its\n# site config, but venv-based isolation interacts badly with nixpkgs\n# python (site.py auto-injects nix site-packages, so the venv pip\n# is shadowed by the nix pip). Instead:\n#   - override the require-virtualenv setting via env var\n#   - install in --user mode, redirected to $FLOX_ENV_CACHE/pip-user\n#   - ignore any stray $PWD/.flox/pip.ini that may be on PIP_CONFIG_FILE\n# sfw blocks before pip writes anything, so the install target\n# doesn't really matter for the demo - we just need pip to run.\nunset PIP_CONFIG_FILE\nexport PIP_REQUIRE_VIRTUALENV=false\n# nix python ships an EXTERNALLY-MANAGED marker (PEP 668) and disables\n# --user installs, so the only path that works without a venv is\n# --target=<dir>. We set PIP_TARGET to a per-env cache location.\nexport PIP_BREAK_SYSTEM_PACKAGES=true\nexport PIP_TARGET=\"$FLOX_ENV_CACHE/pip-target\"\nmkdir -p \"$PIP_TARGET\"\n\n# PATH shims so that npm, pip, and cargo are transparently wrapped by\n# sfw - including in non-interactive shells, scripts, and `flox\n# activate -- cmd` invocations. The _SFW_WRAPPING sentinel breaks the\n# recursion when sfw itself execs the real package manager. Must be\n# prepended LAST so the shim wins over the venv's pip and the\n# cargo/npm bin dirs.\nSFW_SHIMS=\"$FLOX_ENV_CACHE/sfw-shims\"\nmkdir -p \"$SFW_SHIMS\"\nfor cmd in npm pip cargo; do\n  cat > \"$SFW_SHIMS/$cmd\" <<EOF\n#!/usr/bin/env bash\n# Resolve the real $cmd by walking PATH and skipping our shim dir.\n# Always exec it via an absolute path so sfw doesn't have to do its\n# own PATH lookup (which may not see the activated venv's pip).\nreal=\"\"\nIFS=:; for d in \\$PATH; do\n  [ \"\\$d\" = \"$SFW_SHIMS\" ] && continue\n  if [ -x \"\\$d/$cmd\" ]; then real=\"\\$d/$cmd\"; break; fi\ndone\nif [ -z \"\\$real\" ]; then\n  echo \"sfw-shim: real $cmd not found on PATH\" >&2; exit 127\nfi\n# Recursion guard: if sfw re-execs us via PATH, just run the real binary.\nif [ -n \"\\${_SFW_WRAPPING:-}\" ]; then\n  exec \"\\$real\" \"\\$@\"\nfi\nexport _SFW_WRAPPING=1\nexec sfw \"\\$real\" \"\\$@\"\nEOF\n  chmod +x \"$SFW_SHIMS/$cmd\"\ndone\nexport PATH=\"$SFW_SHIMS:$PATH\"\n\ngum style \\\n  --border rounded --border-foreground 212 \\\n  --padding \"1 2\" --margin \"1 0\" \\\n  \"$(gum style --bold --foreground 212 'Socket Firewall demo (sfw-demo)')\" \\\n  \"\" \\\n  \"$(gum style --bold --foreground 196 'WARNING: only run inside a devcontainer or other throwaway sandbox')\" \\\n  \"\" \\\n  \"$(gum style --italic 'npm, pip, and cargo are shimmed - all calls route through sfw automatically.')\" \\\n  \"$(gum style --italic 'Global installs land in $FLOX_ENV_CACHE (npm-global, cargo, pip-target) - no sudo, no $HOME pollution.')\" \\\n  \"\" \\\n  \"$(gum style --bold 'npm (live block expected):')\" \\\n  \"  npm install lodahs\" \\\n  \"\" \\\n  \"$(gum style --bold 'pip (likely taken down - shows sfw wrapping pip):')\" \\\n  \"  pip install fabrice\" \\\n  \"\" \\\n  \"$(gum style --bold 'cargo (likely yanked - shows sfw wrapping cargo):')\" \\\n  \"  cargo install rustdecimal\" \\\n  \"\" \\\n  \"Full walkthrough and contrast cases: README.md\"\n"
+      "on-activate": "# Per-environment \"global\" install locations so package-manager installs\n# land inside $FLOX_ENV_CACHE without sudo or polluting $HOME.\nexport NPM_CONFIG_PREFIX=\"$FLOX_ENV_CACHE/npm-global\"\nmkdir -p \"$NPM_CONFIG_PREFIX/bin\"\nexport CARGO_HOME=\"$FLOX_ENV_CACHE/cargo\"\nmkdir -p \"$CARGO_HOME/bin\"\n\n# pip on nixpkgs python has require-virtualenv set in its site config,\n# is marked EXTERNALLY-MANAGED (PEP 668), and has --user disabled. The\n# only install mode it allows is `pip install --target=<dir>`.\nunset PIP_CONFIG_FILE\nexport PIP_REQUIRE_VIRTUALENV=false\nexport PIP_BREAK_SYSTEM_PACKAGES=true\nexport PIP_TARGET=\"$FLOX_ENV_CACHE/pip-target\"\nmkdir -p \"$PIP_TARGET\"\n\n# Route all supported package managers through sfw transparently\n# (shims shipped with the jbayer/sfw package).\nexport PATH=\"$FLOX_ENV/libexec/sfw-shims:$NPM_CONFIG_PREFIX/bin:$CARGO_HOME/bin:$PATH\"\n\ngum style \\\n  --border rounded --border-foreground 212 \\\n  --padding \"1 2\" --margin \"1 0\" \\\n  \"$(gum style --bold --foreground 212 'Socket Firewall demo (sfw-demo)')\" \\\n  \"\" \\\n  \"$(gum style --bold --foreground 196 'WARNING: only run inside a devcontainer or other throwaway sandbox')\" \\\n  \"\" \\\n  \"$(gum style --italic 'npm, pip, and cargo route through sfw automatically via the shipped shims.')\" \\\n  \"\" \\\n  \"$(gum style --bold 'npm (live block expected):')\" \\\n  \"  npm install lodahs\" \\\n  \"\" \\\n  \"$(gum style --bold 'pip (likely taken down - shows sfw wrapping pip):')\" \\\n  \"  pip install fabrice\" \\\n  \"\" \\\n  \"$(gum style --bold 'cargo (likely yanked - shows sfw wrapping cargo):')\" \\\n  \"  cargo install rustdecimal\" \\\n  \"\" \\\n  \"Full walkthrough and contrast cases: README.md\"\n"
     },
     "options": {
       "systems": [
@@ -270,16 +270,16 @@
     },
     {
       "attr_path": "sfw",
-      "derivation": "/nix/store/58kqlwlhlcn4rnh0nkwbxbk88bxzyy7v-sfw-1.10.0.drv",
+      "derivation": "/nix/store/d34is0dxni0y15aaxjkkvyib14nb4a7d-sfw-1.10.0.drv",
       "description": "Socket Firewall Free - wraps your package manager to prevent installation of malicious packages",
       "install_id": "sfw",
-      "locked_url": "https://github.com/jbayer/flox-sfw?rev=dc3ae3b80270422fa2d1cde7fb643e7a99c83a0e",
+      "locked_url": "https://github.com/jbayer/flox-sfw?rev=cc58d85e5eaa2fdcc37520ac98ad1affe89617cc",
       "name": "sfw-1.10.0",
       "pname": "sfw",
-      "rev": "dc3ae3b80270422fa2d1cde7fb643e7a99c83a0e",
-      "rev_count": 14,
-      "rev_date": "2026-05-24T01:01:15Z",
-      "scrape_date": "2026-05-24T13:55:01.140717Z",
+      "rev": "cc58d85e5eaa2fdcc37520ac98ad1affe89617cc",
+      "rev_count": 26,
+      "rev_date": "2026-05-24T15:22:11Z",
+      "scrape_date": "2026-05-24T15:25:51.739844Z",
       "stabilities": [
         "unstable"
       ],
@@ -288,7 +288,7 @@
         "out"
       ],
       "outputs": {
-        "out": "/nix/store/xa417gq5903fb7n2mvkg7agva0cg0rjm-sfw-1.10.0"
+        "out": "/nix/store/lzw7s8w31i2sld37izdwlr8hwlwzgmbh-sfw-1.10.0"
       },
       "system": "aarch64-darwin",
       "group": "toplevel",
@@ -296,16 +296,16 @@
     },
     {
       "attr_path": "sfw",
-      "derivation": "/nix/store/v3qp62hzgl5c8yq74dxjgihyy7l9jkzs-sfw-1.10.0.drv",
+      "derivation": "/nix/store/1dm5rp8mh9nvsiq7ndln0w9mz1yk8qa7-sfw-1.10.0.drv",
       "description": "Socket Firewall Free - wraps your package manager to prevent installation of malicious packages",
       "install_id": "sfw",
-      "locked_url": "https://github.com/jbayer/flox-sfw?rev=dc3ae3b80270422fa2d1cde7fb643e7a99c83a0e",
+      "locked_url": "https://github.com/jbayer/flox-sfw?rev=cc58d85e5eaa2fdcc37520ac98ad1affe89617cc",
       "name": "sfw-1.10.0",
       "pname": "sfw",
-      "rev": "dc3ae3b80270422fa2d1cde7fb643e7a99c83a0e",
-      "rev_count": 14,
-      "rev_date": "2026-05-24T01:01:15Z",
-      "scrape_date": "2026-05-24T13:55:01.140721Z",
+      "rev": "cc58d85e5eaa2fdcc37520ac98ad1affe89617cc",
+      "rev_count": 26,
+      "rev_date": "2026-05-24T15:22:11Z",
+      "scrape_date": "2026-05-24T15:25:51.739856Z",
       "stabilities": [
         "unstable"
       ],
@@ -314,7 +314,7 @@
         "out"
       ],
       "outputs": {
-        "out": "/nix/store/idqam0a5i6rrvwv7il10zyrd5malrc2p-sfw-1.10.0"
+        "out": "/nix/store/5ypcw7wbaz95sdj4pl5d1v4z4bm8zy5f-sfw-1.10.0"
       },
       "system": "aarch64-linux",
       "group": "toplevel",

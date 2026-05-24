@@ -51,13 +51,13 @@ cd sfw-demo
 flox activate
 ```
 
-On activation the env sets up per-environment "global" install locations inside `$FLOX_ENV_CACHE` so the demo commands work without sudo and without polluting your `$HOME`:
+On activation the env sets up per-environment install locations inside `$FLOX_ENV_CACHE` so the demo commands work without sudo and without polluting your `$HOME`:
 
 - **npm:** `NPM_CONFIG_PREFIX="$FLOX_ENV_CACHE/npm-global"` — `npm install -g <pkg>` installs here.
 - **cargo:** `CARGO_HOME="$FLOX_ENV_CACHE/cargo"` — `cargo install <bin>` installs to `$CARGO_HOME/bin`.
-- **pip:** the nixpkgs python disables all the usual install paths — `require-virtualenv = true` in its site config, PEP 668 `EXTERNALLY-MANAGED` marker, and `ENABLE_USER_SITE = False` (so `--user` is rejected too). The only mode that works without fighting nix is `pip install --target=<dir>`. The env sets `PIP_REQUIRE_VIRTUALENV=false`, `PIP_BREAK_SYSTEM_PACKAGES=true`, and `PIP_TARGET="$FLOX_ENV_CACHE/pip-target"` so `pip install <pkg>` runs straight through. (For the demo, `sfw` blocks before pip ever writes anything — the install target doesn't matter.)
+- **pip:** the nixpkgs python disables all the usual install paths — `require-virtualenv = true` in its site config, PEP 668 `EXTERNALLY-MANAGED` marker, and `ENABLE_USER_SITE = False` (so `--user` is rejected too). The env overrides those (`PIP_REQUIRE_VIRTUALENV=false`, `PIP_BREAK_SYSTEM_PACKAGES=true`) and points `PIP_TARGET` at `$FLOX_ENV_CACHE/pip-target` — the only install mode the nix python doesn't block. (For the demo, `sfw` blocks before pip ever writes anything — the install target doesn't matter.)
 
-It also installs PATH shims for `npm`, `pip`, and `cargo` in `$FLOX_ENV_CACHE/sfw-shims/` and prepends them to `PATH`. The shims pre-resolve the real binary's absolute path and `exec sfw <abs-path> "$@"`, so every call to those tools — interactive prompts, scripts, child processes, `flox activate -- npm ...`, agent-driven invocations — routes through Socket Firewall automatically. A `_SFW_WRAPPING` sentinel breaks the recursion when sfw itself re-execs through the shim.
+The `jbayer/sfw` package itself ships per-ecosystem PATH shims at `$FLOX_ENV/libexec/sfw-shims/{npm,yarn,pnpm,pip,uv,cargo}`. This env prepends that directory to `PATH`, so every call to those tools — interactive prompts, scripts, child processes, `flox activate -- npm ...`, agent-driven invocations — routes through Socket Firewall automatically.
 
 If you ever need the *unshimmed* binary (e.g. for debugging), call it through its absolute path or temporarily remove the shim dir from `PATH`.
 

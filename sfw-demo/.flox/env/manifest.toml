@@ -3,6 +3,9 @@ schema-version = "1.12.0"
 [install]
 # jbayer/sfw is on FloxHub - first activation may need `flox auth login`;
 # subsequent activations work offline once the package is in /nix/store.
+# It ships PATH shims at $FLOX_ENV/libexec/sfw-shims that route the
+# common package managers (npm, yarn, pnpm, pip, uv, cargo) through sfw
+# transparently when that dir is on PATH.
 sfw.pkg-path = "jbayer/sfw"
 nodejs.pkg-path = "nodejs"
 pip.pkg-path = "python313Packages.pip"
@@ -11,70 +14,25 @@ gum.pkg-path = "gum"
 
 [hook]
 on-activate = '''
-
-# Per-environment global install locations so npm/pip/cargo "global"
-# installs land inside $FLOX_ENV_CACHE without sudo or polluting $HOME.
-
-# npm global prefix
+# Per-environment "global" install locations so package-manager installs
+# land inside $FLOX_ENV_CACHE without sudo or polluting $HOME.
 export NPM_CONFIG_PREFIX="$FLOX_ENV_CACHE/npm-global"
 mkdir -p "$NPM_CONFIG_PREFIX/bin"
-export PATH="$NPM_CONFIG_PREFIX/bin:$PATH"
-
-# cargo home (cargo install <bin> -> $CARGO_HOME/bin)
 export CARGO_HOME="$FLOX_ENV_CACHE/cargo"
 mkdir -p "$CARGO_HOME/bin"
-export PATH="$CARGO_HOME/bin:$PATH"
 
-# pip: the nixpkgs build of pip enforces require-virtualenv via its
-# site config, but venv-based isolation interacts badly with nixpkgs
-# python (site.py auto-injects nix site-packages, so the venv pip
-# is shadowed by the nix pip). Instead:
-#   - override the require-virtualenv setting via env var
-#   - install in --user mode, redirected to $FLOX_ENV_CACHE/pip-user
-#   - ignore any stray $PWD/.flox/pip.ini that may be on PIP_CONFIG_FILE
-# sfw blocks before pip writes anything, so the install target
-# doesn't really matter for the demo - we just need pip to run.
+# pip on nixpkgs python has require-virtualenv set in its site config,
+# is marked EXTERNALLY-MANAGED (PEP 668), and has --user disabled. The
+# only install mode it allows is `pip install --target=<dir>`.
 unset PIP_CONFIG_FILE
 export PIP_REQUIRE_VIRTUALENV=false
-# nix python ships an EXTERNALLY-MANAGED marker (PEP 668) and disables
-# --user installs, so the only path that works without a venv is
-# --target=<dir>. We set PIP_TARGET to a per-env cache location.
 export PIP_BREAK_SYSTEM_PACKAGES=true
 export PIP_TARGET="$FLOX_ENV_CACHE/pip-target"
 mkdir -p "$PIP_TARGET"
 
-# PATH shims so that npm, pip, and cargo are transparently wrapped by
-# sfw - including in non-interactive shells, scripts, and `flox
-# activate -- cmd` invocations. The _SFW_WRAPPING sentinel breaks the
-# recursion when sfw itself execs the real package manager. Must be
-# prepended LAST so the shim wins over the venv's pip and the
-# cargo/npm bin dirs.
-SFW_SHIMS="$FLOX_ENV_CACHE/sfw-shims"
-mkdir -p "$SFW_SHIMS"
-for cmd in npm pip cargo; do
-  cat > "$SFW_SHIMS/$cmd" <<EOF
-#!/usr/bin/env bash
-# Resolve the real $cmd by walking PATH and skipping our shim dir.
-# Always exec it via an absolute path so sfw doesn't have to do its
-# own PATH lookup (which may not see the activated venv's pip).
-real=""
-IFS=:; for d in \$PATH; do
-  [ "\$d" = "$SFW_SHIMS" ] && continue
-  if [ -x "\$d/$cmd" ]; then real="\$d/$cmd"; break; fi
-done
-if [ -z "\$real" ]; then
-  echo "sfw-shim: real $cmd not found on PATH" >&2; exit 127
-fi
-# Recursion guard: if sfw re-execs us via PATH, just run the real binary.
-if [ -n "\${_SFW_WRAPPING:-}" ]; then
-  exec "\$real" "\$@"
-fi
-export _SFW_WRAPPING=1
-exec sfw "\$real" "\$@"
-EOF
-  chmod +x "$SFW_SHIMS/$cmd"
-done
-export PATH="$SFW_SHIMS:$PATH"
+# Route all supported package managers through sfw transparently
+# (shims shipped with the jbayer/sfw package).
+export PATH="$FLOX_ENV/libexec/sfw-shims:$NPM_CONFIG_PREFIX/bin:$CARGO_HOME/bin:$PATH"
 
 gum style \
   --border rounded --border-foreground 212 \
@@ -83,8 +41,7 @@ gum style \
   "" \
   "$(gum style --bold --foreground 196 'WARNING: only run inside a devcontainer or other throwaway sandbox')" \
   "" \
-  "$(gum style --italic 'npm, pip, and cargo are shimmed - all calls route through sfw automatically.')" \
-  "$(gum style --italic 'Global installs land in $FLOX_ENV_CACHE (npm-global, cargo, pip-target) - no sudo, no $HOME pollution.')" \
+  "$(gum style --italic 'npm, pip, and cargo route through sfw automatically via the shipped shims.')" \
   "" \
   "$(gum style --bold 'npm (live block expected):')" \
   "  npm install lodahs" \
