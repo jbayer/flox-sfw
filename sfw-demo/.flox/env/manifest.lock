@@ -2,9 +2,131 @@
   "lockfile-version": 1,
   "manifest": {
     "schema-version": "1.12.0",
-    "hook": {},
-    "profile": {},
-    "options": {}
+    "install": {
+      "nodejs": {
+        "pkg-path": "nodejs"
+      },
+      "sfw": {
+        "pkg-path": "jbayer/sfw"
+      }
+    },
+    "options": {
+      "systems": [
+        "aarch64-darwin",
+        "aarch64-linux"
+      ]
+    }
   },
-  "packages": []
+  "packages": [
+    {
+      "attr_path": "nodejs",
+      "broken": false,
+      "derivation": "/nix/store/4f7gz4vdm9msfw3958cy6d7b4mn8zcpn-nodejs-24.15.0.drv",
+      "description": "Event-driven I/O framework for the V8 JavaScript engine",
+      "install_id": "nodejs",
+      "license": "MIT",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=f83fc3c307e74bc5fd5adb7eb6b8b13ffd2a36e1",
+      "name": "nodejs-24.15.0",
+      "pname": "nodejs",
+      "rev": "f83fc3c307e74bc5fd5adb7eb6b8b13ffd2a36e1",
+      "rev_count": 1002845,
+      "rev_date": "2026-05-21T09:53:25Z",
+      "scrape_date": "2026-05-23T07:14:23.026411Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "24.15.0",
+      "outputs_to_install": [
+        "out"
+      ],
+      "outputs": {
+        "out": "/nix/store/3mvbmkd7lmxi3xlka1avra24flwbgjv9-nodejs-24.15.0"
+      },
+      "system": "aarch64-darwin",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "nodejs",
+      "broken": false,
+      "derivation": "/nix/store/lzdf2d8kky8k67nqjv07r9zbcqmihns7-nodejs-24.15.0.drv",
+      "description": "Event-driven I/O framework for the V8 JavaScript engine",
+      "install_id": "nodejs",
+      "license": "MIT",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=f83fc3c307e74bc5fd5adb7eb6b8b13ffd2a36e1",
+      "name": "nodejs-24.15.0",
+      "pname": "nodejs",
+      "rev": "f83fc3c307e74bc5fd5adb7eb6b8b13ffd2a36e1",
+      "rev_count": 1002845,
+      "rev_date": "2026-05-21T09:53:25Z",
+      "scrape_date": "2026-05-23T07:49:22.998381Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "24.15.0",
+      "outputs_to_install": [
+        "out"
+      ],
+      "outputs": {
+        "out": "/nix/store/rmdjmd0iy5zlyg0j2i1cd0s7ha1562fs-nodejs-24.15.0"
+      },
+      "system": "aarch64-linux",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "sfw",
+      "derivation": "/nix/store/6di0lby6lp6c8rrpay44brjlahwx5jhb-sfw-.drv",
+      "description": "Socket Firewall Free - wraps your package manager to prevent installation of malicious packages",
+      "install_id": "sfw",
+      "locked_url": "https://github.com/jbayer/flox-sfw?rev=c434f56ca5e88c56494d506af7a3de683ec1acd6",
+      "name": "sfw-",
+      "pname": "sfw",
+      "rev": "c434f56ca5e88c56494d506af7a3de683ec1acd6",
+      "rev_count": 3,
+      "rev_date": "2026-05-24T00:07:51Z",
+      "scrape_date": "2026-05-24T00:22:38.056006751Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "version": "",
+      "outputs_to_install": [
+        "out"
+      ],
+      "outputs": {
+        "out": "/nix/store/vcw9b4yr03a5c2f6d70sq75w9505ldlj-sfw-"
+      },
+      "system": "aarch64-darwin",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "sfw",
+      "derivation": "/nix/store/a2v3g7h5pw0mdva3wzvff248nbqyn5z3-sfw-.drv",
+      "description": "Socket Firewall Free - wraps your package manager to prevent installation of malicious packages",
+      "install_id": "sfw",
+      "locked_url": "https://github.com/jbayer/flox-sfw?rev=c434f56ca5e88c56494d506af7a3de683ec1acd6",
+      "name": "sfw-",
+      "pname": "sfw",
+      "rev": "c434f56ca5e88c56494d506af7a3de683ec1acd6",
+      "rev_count": 3,
+      "rev_date": "2026-05-24T00:07:51Z",
+      "scrape_date": "2026-05-24T00:22:38.056008251Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "version": "",
+      "outputs_to_install": [
+        "out"
+      ],
+      "outputs": {
+        "out": "/nix/store/gf89blbv2530p6w58m6h3s0ciq3d3s5f-sfw-"
+      },
+      "system": "aarch64-linux",
+      "group": "toplevel",
+      "priority": 5
+    }
+  ]
 }

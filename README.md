@@ -10,6 +10,14 @@ This repo repackages SocketDev's prebuilt binaries as a Flox manifest build, pub
 flox install jbayer/sfw
 ```
 
+The first time you install or activate, Flox fetches the package from FloxHub — you may need to authenticate first:
+
+```bash
+flox auth login
+```
+
+Once the package is in the local `/nix/store`, subsequent activations work offline. You only need to log in again to check for or pull newer versions.
+
 Then:
 
 ```bash

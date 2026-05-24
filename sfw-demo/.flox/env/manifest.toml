@@ -6,6 +6,12 @@
 ## WARNING: The demo intentionally attempts to install a real malicious
 ## npm package (lodahs). Run only inside a devcontainer or other
 ## throwaway sandbox.
+##
+## NOTE: `jbayer/sfw` is published on FloxHub. The first `flox activate`
+## fetches it and may require `flox auth login` if you haven't already.
+## Once the package is in the local /nix/store you can activate offline;
+## you'll only need to re-authenticate when checking for upgrades
+## (`flox upgrade` / `flox install` against a newer release).
 schema-version = "1.12.0"
 
 [install]
