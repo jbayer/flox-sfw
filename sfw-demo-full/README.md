@@ -6,13 +6,13 @@ For a minimal "just install sfw with the shims wired up" environment that doesn'
 
 ## Warning
 
-This demo intentionally attempts to install real malicious packages from public registries:
+This demo provides instructions to attempt installs of a real malicious package or typosquats from public registries:
 
 - npm: **`lodahs`** — typosquat of `lodash`
 - pypi: **`fabrice`** — typosquat of `fabric`
 - crates.io: **`rustdecimal`** — typosquat of `rust_decimal`
 
-**Do not run on your workstation.** Run only inside an isolated, throwaway environment such as a devcontainer, VM, or ephemeral cloud sandbox.
+**Recommendation.** Run inside an isolated, throwaway environment such as a devcontainer, VM, or ephemeral cloud sandbox.
 
 A ready-to-use devcontainer is included at `sfw-demo-full/.devcontainer/devcontainer.json` — open this directory in VS Code (or any devcontainer-aware tool) and choose "Reopen in Container" to get an isolated Linux environment with Flox preinstalled.
 

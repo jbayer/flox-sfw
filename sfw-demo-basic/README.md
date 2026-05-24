@@ -6,9 +6,16 @@ For an end-to-end demo with `nodejs`, `pip`, `cargo` pre-installed and writable 
 
 ## Warning
 
-If you do try the example commands below with a real malicious package name, only run inside a devcontainer, VM, or other throwaway sandbox.
+If you try to install real malicious packages, it's recommended to run inside a devcontainer, VM, or other throwaway sandbox.This demo provides instructions to attempt installs of a real malicious package or typosquats from public registries:
 
-A ready-to-use devcontainer is included at `sfw-demo-basic/.devcontainer/devcontainer.json`.
+- npm: **`lodahs`** — typosquat of `lodash`
+- pypi: **`fabrice`** — typosquat of `fabric`
+- crates.io: **`rustdecimal`** — typosquat of `rust_decimal`
+
+**Recommendation.** Run inside an isolated, throwaway environment such as a devcontainer, VM, or ephemeral cloud sandbox.
+
+A ready-to-use devcontainer is included at `sfw-demo-basic/.devcontainer/devcontainer.json` — open this directory in VS Code (or any devcontainer-aware tool) and choose "Reopen in Container" to get an isolated Linux environment with Flox preinstalled.
+
 
 ## FloxHub authentication
 
