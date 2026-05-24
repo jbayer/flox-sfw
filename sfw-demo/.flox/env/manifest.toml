@@ -6,8 +6,7 @@ schema-version = "1.12.0"
 sfw.pkg-path = "jbayer/sfw"
 # nodejs for the `sfw npm install lodahs` demo (see README.md)
 nodejs.pkg-path = "nodejs"
-# python313 + pip for the `sfw pip install fabrice` demo (see README.md)
-python3.pkg-path = "python313"
+# pip for the `sfw pip install fabrice` demo (pulls python3 in as a runtime dep)
 pip.pkg-path = "python313Packages.pip"
 
 [options]

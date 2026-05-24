@@ -32,7 +32,7 @@ You only need to log in again when:
 
 - `jbayer/sfw` — the Flox-packaged Socket Firewall (from this repo's published package)
 - `nodejs` — node + npm
-- `python3` + `pip` — for the PyPI demo
+- `pip` — pulls `python3` in as a runtime dependency, used for the PyPI demo
 
 Supported systems: `aarch64-darwin`, `aarch64-linux`.
 
