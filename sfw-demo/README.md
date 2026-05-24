@@ -38,6 +38,10 @@ You only need to log in again when:
 
 Supported systems: `aarch64-darwin`, `aarch64-linux`.
 
+## A note on the PyPI and cargo demos
+
+PyPI and crates.io take flagged malicious packages down quickly — often within hours of disclosure. By the time you run these demos, `fabrice` and `rustdecimal` may already be unreachable, in which case the package manager fails with a normal "not found" / "yanked" error and `sfw` never gets to issue a block decision. **For those two demos, treat success as "sfw is correctly wrapping the pip / cargo call and announcing itself as the policy layer."** A live block — where sfw refuses traffic for a still-published malicious package — is best demonstrated with the npm `lodahs` example (npm tends to leave flagged packages reachable longer), or by swapping in any currently-flagged package from [Socket's advisories](https://socket.dev/) at the moment you run the demo.
+
 ## Activate the environment
 
 From a devcontainer:
@@ -69,9 +73,7 @@ source /tmp/sfw-demo-venv/bin/activate
 sfw pip install fabrice
 ```
 
-Expected: `sfw` intercepts pip's PyPI traffic and blocks `fabrice` (a typosquat of `fabric` that has been observed exfiltrating AWS credentials).
-
-**Heads up:** PyPI removes flagged malicious packages quickly, often within hours of disclosure. By the time you try this, `fabrice` may already be unreachable on PyPI — in which case pip will fail with a normal "no matching distribution" error rather than an sfw block. That's fine for the demo: the point is to see `sfw` wrapping pip and announcing itself as the policy layer in front of your installs. If you want to see a live block, swap `fabrice` for a currently-flagged malicious package from [Socket's advisories](https://socket.dev/) at the time you're running this.
+Expected: `sfw` intercepts pip's PyPI traffic and announces itself. If `fabrice` is still published, sfw blocks it; if PyPI has already taken it down, pip exits with a "no matching distribution" error — either way, seeing the `sfw` banner in front of pip is the demo's point (see [the PyPI/cargo note above](#a-note-on-the-pypi-and-cargo-demos)). `fabrice` is a typosquat of `fabric` that has been observed exfiltrating AWS credentials.
 
 ## Demo - cargo (`rustdecimal`)
 
@@ -82,9 +84,7 @@ mkdir -p /tmp/sfw-demo-cargo && cd /tmp/sfw-demo-cargo
 sfw cargo install rustdecimal
 ```
 
-Expected: `sfw` intercepts cargo's crates.io traffic and blocks `rustdecimal` (a 2022 typosquat of `rust_decimal` that injected a payload during build).
-
-**Heads up:** crates.io *yanks* flagged crates quickly — `rustdecimal` was yanked the day it was disclosed. A yanked crate may still resolve in some flows but typically fails with a "not found" or "yanked" error before sfw needs to step in. As with the PyPI demo, the goal is to see sfw wrap cargo and announce itself as the policy layer. Swap in a currently-flagged crate from [Socket's advisories](https://socket.dev/) for a live block.
+Expected: `sfw` intercepts cargo's crates.io traffic and announces itself. `rustdecimal` was yanked from crates.io the day it was disclosed in 2022 (it injected a payload during build), so the most likely outcome today is a "could not find rustdecimal" error from cargo — again, seeing the `sfw` banner in front of cargo is what proves the integration is working (see [the PyPI/cargo note above](#a-note-on-the-pypi-and-cargo-demos)).
 
 ## Contrast - legitimate installs still work
 
