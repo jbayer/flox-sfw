@@ -3,8 +3,12 @@
 ## Upstream:  https://github.com/SocketDev/sfw-free
 ## Releases:  https://github.com/SocketDev/sfw-free/releases
 ##
-## To bump the pinned version, update SFW_VERSION and the per-system
-## SFW_SHA256_* values under [vars], then `flox build sfw`.
+## To bump the pinned version, update:
+##   - [build.sfw] version
+##   - [vars] SFW_VERSION
+##   - [vars] SFW_SHA256_DARWIN_ARM64
+##   - [vars] SFW_SHA256_LINUX_ARM64
+## then `flox build sfw`. (The update-check workflow handles this for you.)
 schema-version = "1.12.0"
 
 [install]
@@ -18,7 +22,7 @@ SFW_SHA256_LINUX_ARM64 = "d7e969c17e6d23ac1cb0dea81ff87ef9bca2d83570270d91aab14b
 
 [build.sfw]
 description = "Socket Firewall Free - wraps your package manager to prevent installation of malicious packages"
-version.command = "echo $SFW_VERSION"
+version = "1.10.0"
 sandbox = "off"
 runtime-packages = []
 command = '''

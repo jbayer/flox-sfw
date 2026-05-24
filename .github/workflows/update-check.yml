@@ -60,6 +60,7 @@ jobs:
           sed -i -E "s|^SFW_VERSION = \".*\"|SFW_VERSION = \"${LATEST}\"|" .flox/env/manifest.toml
           sed -i -E "s|^SFW_SHA256_DARWIN_ARM64 = \".*\"|SFW_SHA256_DARWIN_ARM64 = \"${DARWIN_SHA}\"|" .flox/env/manifest.toml
           sed -i -E "s|^SFW_SHA256_LINUX_ARM64 = \".*\"|SFW_SHA256_LINUX_ARM64 = \"${LINUX_SHA}\"|" .flox/env/manifest.toml
+          sed -i -E "s|^version = \".*\"|version = \"${LATEST}\"|" .flox/env/manifest.toml
 
       - name: Open PR
         if: steps.versions.outputs.up_to_date == 'false'

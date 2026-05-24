@@ -26,9 +26,7 @@
         "command": "  set -euo pipefail\n\n  case \"$(uname -s)-$(uname -m)\" in\n    Darwin-arm64)\n      asset=\"sfw-free-macos-arm64\"\n      expected_sha=\"$SFW_SHA256_DARWIN_ARM64\"\n      ;;\n    Linux-aarch64)\n      asset=\"sfw-free-linux-arm64\"\n      expected_sha=\"$SFW_SHA256_LINUX_ARM64\"\n      ;;\n    *)\n      echo \"Unsupported system: $(uname -sm)\" >&2\n      exit 1\n      ;;\n  esac\n\n  url=\"https://github.com/SocketDev/sfw-free/releases/download/v${SFW_VERSION}/${asset}\"\n  echo \"Downloading ${url}\"\n  curl --fail --silent --show-error --location --output sfw \"$url\"\n\n  echo \"${expected_sha}  sfw\" | sha256sum -c -\n\n  mkdir -p \"$out/bin\"\n  mv sfw \"$out/bin/sfw\"\n  chmod +x \"$out/bin/sfw\"\n",
         "runtime-packages": [],
         "sandbox": "off",
-        "version": {
-          "command": "echo $SFW_VERSION"
-        },
+        "version": "1.10.0",
         "description": "Socket Firewall Free - wraps your package manager to prevent installation of malicious packages"
       }
     }
