@@ -20,10 +20,12 @@
       }
     },
     "hook": {
-      "on-activate": "# Per-environment \"global\" install locations so package-manager installs\n# land inside $FLOX_ENV_CACHE without sudo or polluting $HOME.\nexport NPM_CONFIG_PREFIX=\"$FLOX_ENV_CACHE/npm-global\"\nmkdir -p \"$NPM_CONFIG_PREFIX/bin\"\nexport CARGO_HOME=\"$FLOX_ENV_CACHE/cargo\"\nmkdir -p \"$CARGO_HOME/bin\"\n\n# pip on nixpkgs python has require-virtualenv set in its site config,\n# is marked EXTERNALLY-MANAGED (PEP 668), and has --user disabled. The\n# only install mode it allows is `pip install --target=<dir>`.\nunset PIP_CONFIG_FILE\nexport PIP_REQUIRE_VIRTUALENV=false\nexport PIP_BREAK_SYSTEM_PACKAGES=true\nexport PIP_TARGET=\"$FLOX_ENV_CACHE/pip-target\"\nmkdir -p \"$PIP_TARGET\"\n\n# Route all supported package managers through sfw transparently\n# (shims shipped with the jbayer/sfw package). Also re-prepended in\n# [profile.common] so the interactive shell's PATH (which flox may\n# reset to put $FLOX_ENV/bin first after on-activate runs) still\n# resolves npm/pip/cargo to the shim.\nexport PATH=\"$NPM_CONFIG_PREFIX/bin:$CARGO_HOME/bin:$PATH\"\n\ngum style \\\n  --border rounded --border-foreground 212 \\\n  --padding \"1 2\" --margin \"1 0\" \\\n  \"$(gum style --bold --foreground 212 'Socket Firewall demo (sfw-demo)')\" \\\n  \"\" \\\n  \"$(gum style --bold --foreground 196 'WARNING: recommend running inside a container or sandbox')\" \\\n  \"\" \\\n  \"$(gum style --italic 'npm, pip, and cargo route through sfw automatically via the shipped shims.')\" \\\n  \"\" \\\n  \"$(gum style --bold 'npm (live block expected):')\" \\\n  \"  npm install lodahs\" \\\n  \"\" \\\n  \"$(gum style --bold 'pip (likely taken down - shows sfw wrapping pip):')\" \\\n  \"  pip install fabrice\" \\\n  \"\" \\\n  \"$(gum style --bold 'cargo (likely yanked - shows sfw wrapping cargo):')\" \\\n  \"  cargo install rustdecimal\" \\\n  \"\" \\\n  \"Full walkthrough and contrast cases: README.md\"\n"
+      "on-activate": "# Per-environment \"global\" install locations so package-manager installs\n# land inside $FLOX_ENV_CACHE without sudo or polluting $HOME.\nexport NPM_CONFIG_PREFIX=\"$FLOX_ENV_CACHE/npm-global\"\nmkdir -p \"$NPM_CONFIG_PREFIX/bin\"\nexport CARGO_HOME=\"$FLOX_ENV_CACHE/cargo\"\nmkdir -p \"$CARGO_HOME/bin\"\n\n# pip on nixpkgs python has require-virtualenv set in its site config,\n# is marked EXTERNALLY-MANAGED (PEP 668), and has --user disabled. The\n# only install mode it allows is `pip install --target=<dir>`.\nunset PIP_CONFIG_FILE\nexport PIP_REQUIRE_VIRTUALENV=false\nexport PIP_BREAK_SYSTEM_PACKAGES=true\nexport PIP_TARGET=\"$FLOX_ENV_CACHE/pip-target\"\nmkdir -p \"$PIP_TARGET\"\n\n# Route all supported package managers through sfw transparently\n# (shims shipped with the jbayer/sfw package). Also re-prepended in\n# [profile.common] so the interactive shell's PATH (which flox may\n# reset to put $FLOX_ENV/bin first after on-activate runs) still\n# resolves npm/pip/cargo to the shim.\nexport PATH=\"$FLOX_ENV/libexec/sfw-shims:$NPM_CONFIG_PREFIX/bin:$CARGO_HOME/bin:$PATH\"\n\ngum style \\\n  --border rounded --border-foreground 212 \\\n  --padding \"1 2\" --margin \"1 0\" \\\n  \"$(gum style --bold --foreground 212 'Socket Firewall demo - full (sfw-demo-full)')\" \\\n  \"\" \\\n  \"$(gum style --bold --foreground 196 'WARNING: recommend running inside a container or sandbox')\" \\\n  \"\" \\\n  \"$(gum style --italic 'npm, pip, and cargo route through sfw automatically via the shipped shims.')\" \\\n  \"\" \\\n  \"$(gum style --bold 'npm (live block expected):')\" \\\n  \"  npm install lodahs\" \\\n  \"\" \\\n  \"$(gum style --bold 'pip (likely taken down - shows sfw wrapping pip):')\" \\\n  \"  pip install fabrice\" \\\n  \"\" \\\n  \"$(gum style --bold 'cargo (likely yanked - shows sfw wrapping cargo):')\" \\\n  \"  cargo install rustdecimal\" \\\n  \"\" \\\n  \"Full walkthrough and contrast cases: README.md\"\n"
     },
     "profile": {
-      "common": "# Re-prepend the sfw shim dir in the user's interactive shell. flox's\n# interactive activation can put $FLOX_ENV/bin before our hook's PATH\n# changes, which would let plain `npm`/`pip`/`cargo` bypass the shim.\nexport PATH=\"$FLOX_ENV/libexec/sfw-shims:$PATH\"\n"
+      "common": "# Re-prepend the sfw shim dir in the user's interactive shell. flox's\n# interactive activation can put $FLOX_ENV/bin before our hook's PATH\n# changes, which would let plain `npm`/`pip`/`cargo` bypass the shim.\nexport PATH=\"$FLOX_ENV/libexec/sfw-shims:$PATH\"\n",
+      "bash": "source \"$FLOX_ENV/libexec/sfw-shims/activate.bash\"\n",
+      "zsh": "source \"$FLOX_ENV/libexec/sfw-shims/activate.zsh\"\n"
     },
     "options": {
       "systems": [
@@ -393,16 +395,16 @@
     },
     {
       "attr_path": "sfw",
-      "derivation": "/nix/store/mx99mpp69iyhkmb61i9m8b20qaj8vb0j-sfw-1.10.0.drv",
+      "derivation": "/nix/store/k7qjc27nkagvpldphvmrqm1i4qahqb7z-sfw-1.10.0.drv",
       "description": "Socket Firewall Free - wraps your package manager to prevent installation of malicious packages",
       "install_id": "sfw",
-      "locked_url": "https://github.com/jbayer/flox-sfw?rev=20760eef9792e9862d56a4e0ee96f1c42878649c",
+      "locked_url": "https://github.com/jbayer/flox-sfw?rev=0d07f76ff6e61da56ca353c411ac503d4957557d",
       "name": "sfw-1.10.0",
       "pname": "sfw",
-      "rev": "20760eef9792e9862d56a4e0ee96f1c42878649c",
-      "rev_count": 29,
-      "rev_date": "2026-05-24T15:40:26Z",
-      "scrape_date": "2026-05-24T15:44:13.695738Z",
+      "rev": "0d07f76ff6e61da56ca353c411ac503d4957557d",
+      "rev_count": 39,
+      "rev_date": "2026-05-24T17:27:07Z",
+      "scrape_date": "2026-05-24T17:35:59.406775Z",
       "stabilities": [
         "unstable"
       ],
@@ -411,7 +413,7 @@
         "out"
       ],
       "outputs": {
-        "out": "/nix/store/0l0bi4yi822kn3gkkxhispq6dhn4fzgr-sfw-1.10.0"
+        "out": "/nix/store/dmpyks9lmkq1avwhdbdkmc0829c5x8pl-sfw-1.10.0"
       },
       "system": "aarch64-darwin",
       "group": "toplevel",
@@ -419,16 +421,16 @@
     },
     {
       "attr_path": "sfw",
-      "derivation": "/nix/store/0c33351cnsh2l0zz1g6mpp7yzayjxss4-sfw-1.10.0.drv",
+      "derivation": "/nix/store/4lmqp2s6xpxi1gh27fwcmm4bvi6migp3-sfw-1.10.0.drv",
       "description": "Socket Firewall Free - wraps your package manager to prevent installation of malicious packages",
       "install_id": "sfw",
-      "locked_url": "https://github.com/jbayer/flox-sfw?rev=20760eef9792e9862d56a4e0ee96f1c42878649c",
+      "locked_url": "https://github.com/jbayer/flox-sfw?rev=0d07f76ff6e61da56ca353c411ac503d4957557d",
       "name": "sfw-1.10.0",
       "pname": "sfw",
-      "rev": "20760eef9792e9862d56a4e0ee96f1c42878649c",
-      "rev_count": 29,
-      "rev_date": "2026-05-24T15:40:26Z",
-      "scrape_date": "2026-05-24T15:44:13.695738Z",
+      "rev": "0d07f76ff6e61da56ca353c411ac503d4957557d",
+      "rev_count": 39,
+      "rev_date": "2026-05-24T17:27:07Z",
+      "scrape_date": "2026-05-24T17:35:59.406777Z",
       "stabilities": [
         "unstable"
       ],
@@ -437,7 +439,7 @@
         "out"
       ],
       "outputs": {
-        "out": "/nix/store/0jaz0xkmp186ajcxbdrqklzym9j8px7x-sfw-1.10.0"
+        "out": "/nix/store/6cx7g4kq5mmly15p6nm5r5fxlcrqcvrj-sfw-1.10.0"
       },
       "system": "aarch64-linux",
       "group": "toplevel",
@@ -445,16 +447,16 @@
     },
     {
       "attr_path": "sfw",
-      "derivation": "/nix/store/0hk5rs704s6jjgzfizqw609v941s2phm-sfw-1.10.0.drv",
+      "derivation": "/nix/store/4zdqmzx36qw1586gbab40i263qy6d9pc-sfw-1.10.0.drv",
       "description": "Socket Firewall Free - wraps your package manager to prevent installation of malicious packages",
       "install_id": "sfw",
-      "locked_url": "https://github.com/jbayer/flox-sfw?rev=20760eef9792e9862d56a4e0ee96f1c42878649c",
+      "locked_url": "https://github.com/jbayer/flox-sfw?rev=0d07f76ff6e61da56ca353c411ac503d4957557d",
       "name": "sfw-1.10.0",
       "pname": "sfw",
-      "rev": "20760eef9792e9862d56a4e0ee96f1c42878649c",
-      "rev_count": 29,
-      "rev_date": "2026-05-24T15:40:26Z",
-      "scrape_date": "2026-05-24T15:44:13.695739Z",
+      "rev": "0d07f76ff6e61da56ca353c411ac503d4957557d",
+      "rev_count": 39,
+      "rev_date": "2026-05-24T17:27:07Z",
+      "scrape_date": "2026-05-24T17:35:59.406779Z",
       "stabilities": [
         "unstable"
       ],
@@ -463,7 +465,7 @@
         "out"
       ],
       "outputs": {
-        "out": "/nix/store/vr1dilkwdqgwl0ld1cj28h04vdv4m6rl-sfw-1.10.0"
+        "out": "/nix/store/valwaj3vc46b6683s70xpfxd2knfw49m-sfw-1.10.0"
       },
       "system": "x86_64-linux",
       "group": "toplevel",

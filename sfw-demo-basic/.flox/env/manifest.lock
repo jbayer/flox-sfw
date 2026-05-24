@@ -1,0 +1,196 @@
+{
+  "lockfile-version": 1,
+  "manifest": {
+    "schema-version": "1.12.0",
+    "install": {
+      "gum": {
+        "pkg-path": "gum"
+      },
+      "sfw": {
+        "pkg-path": "jbayer/sfw"
+      }
+    },
+    "hook": {
+      "on-activate": "# Route any supported package manager on PATH through sfw transparently\n# (shims shipped with the jbayer/sfw package). Also re-prepended in\n# [profile.common] so the interactive shell's PATH (which flox may\n# reset to put $FLOX_ENV/bin first after on-activate runs) still\n# resolves the shimmed names to the shim.\nexport PATH=\"$FLOX_ENV/libexec/sfw-shims:$PATH\"\n\ngum style \\\n  --border rounded --border-foreground 212 \\\n  --padding \"1 2\" --margin \"1 0\" \\\n  \"$(gum style --bold --foreground 212 'Socket Firewall demo - basic (sfw-demo-basic)')\" \\\n  \"\" \\\n  \"$(gum style --bold --foreground 196 'WARNING: recommend running inside a container or sandbox')\" \\\n  \"\" \\\n  \"$(gum style --italic 'Minimal env: just jbayer/sfw + its shipped shims on PATH.')\" \\\n  \"$(gum style --italic 'Bring your own npm/yarn/pnpm/pip/uv/cargo (system, layered env, etc.) and the shims route them through sfw.')\" \\\n  \"\" \\\n  \"$(gum style --bold 'Examples (require the relevant tool on PATH):')\" \\\n  \"  npm install lodahs\" \\\n  \"  yarn add lodahs\" \\\n  \"  pnpm add lodahs\" \\\n  \"  pip install fabrice\" \\\n  \"  uv pip install fabrice\" \\\n  \"  cargo install rustdecimal\" \\\n  \"\" \\\n  \"Need pre-installed tooling and writable install targets? See sfw-demo-full.\"\n"
+    },
+    "profile": {
+      "common": "# Re-prepend the sfw shim dir in the user's interactive shell. flox's\n# interactive activation can put $FLOX_ENV/bin before our hook's PATH\n# changes, which would let plain `npm`/`pip`/`cargo` bypass the shim.\nexport PATH=\"$FLOX_ENV/libexec/sfw-shims:$PATH\"\n",
+      "bash": "source \"$FLOX_ENV/libexec/sfw-shims/activate.bash\"\n",
+      "zsh": "source \"$FLOX_ENV/libexec/sfw-shims/activate.zsh\"\n"
+    },
+    "options": {
+      "systems": [
+        "aarch64-darwin",
+        "aarch64-linux",
+        "x86_64-linux"
+      ]
+    }
+  },
+  "packages": [
+    {
+      "attr_path": "gum",
+      "broken": false,
+      "derivation": "/nix/store/j8ybq6l473j7zinlzgivynnqb9zvl76a-gum-0.17.0.drv",
+      "description": "Tasty Bubble Gum for your shell",
+      "install_id": "gum",
+      "license": "MIT",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=29916453413845e54a65b8a1cf996842300cd299",
+      "name": "gum-0.17.0",
+      "pname": "gum",
+      "rev": "29916453413845e54a65b8a1cf996842300cd299",
+      "rev_count": 1003640,
+      "rev_date": "2026-05-23T03:54:30Z",
+      "scrape_date": "2026-05-24T07:05:51.991028Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "0.17.0",
+      "outputs_to_install": [
+        "out"
+      ],
+      "outputs": {
+        "out": "/nix/store/6jb5frkadampkcmbjynch118cc4smzfj-gum-0.17.0"
+      },
+      "system": "aarch64-darwin",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "gum",
+      "broken": false,
+      "derivation": "/nix/store/3rhl22hpsgrv3p835m8kkmkli1v1swnq-gum-0.17.0.drv",
+      "description": "Tasty Bubble Gum for your shell",
+      "install_id": "gum",
+      "license": "MIT",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=29916453413845e54a65b8a1cf996842300cd299",
+      "name": "gum-0.17.0",
+      "pname": "gum",
+      "rev": "29916453413845e54a65b8a1cf996842300cd299",
+      "rev_count": 1003640,
+      "rev_date": "2026-05-23T03:54:30Z",
+      "scrape_date": "2026-05-24T07:34:06.968838Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "0.17.0",
+      "outputs_to_install": [
+        "out"
+      ],
+      "outputs": {
+        "out": "/nix/store/8p8fi8pl4lb776q2gnby3rd3mcbj5grh-gum-0.17.0"
+      },
+      "system": "aarch64-linux",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "gum",
+      "broken": false,
+      "derivation": "/nix/store/b84rjgg7a2yk5hjvrml660hrir7xd3nx-gum-0.17.0.drv",
+      "description": "Tasty Bubble Gum for your shell",
+      "install_id": "gum",
+      "license": "MIT",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=29916453413845e54a65b8a1cf996842300cd299",
+      "name": "gum-0.17.0",
+      "pname": "gum",
+      "rev": "29916453413845e54a65b8a1cf996842300cd299",
+      "rev_count": 1003640,
+      "rev_date": "2026-05-23T03:54:30Z",
+      "scrape_date": "2026-05-24T08:31:58.419233Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "0.17.0",
+      "outputs_to_install": [
+        "out"
+      ],
+      "outputs": {
+        "out": "/nix/store/2ii7sbkq44zrkv4iv6g7bqi47m4ch28b-gum-0.17.0"
+      },
+      "system": "x86_64-linux",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "sfw",
+      "derivation": "/nix/store/k7qjc27nkagvpldphvmrqm1i4qahqb7z-sfw-1.10.0.drv",
+      "description": "Socket Firewall Free - wraps your package manager to prevent installation of malicious packages",
+      "install_id": "sfw",
+      "locked_url": "https://github.com/jbayer/flox-sfw?rev=0d07f76ff6e61da56ca353c411ac503d4957557d",
+      "name": "sfw-1.10.0",
+      "pname": "sfw",
+      "rev": "0d07f76ff6e61da56ca353c411ac503d4957557d",
+      "rev_count": 39,
+      "rev_date": "2026-05-24T17:27:07Z",
+      "scrape_date": "2026-05-24T17:35:36.979638Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "version": "1.10.0",
+      "outputs_to_install": [
+        "out"
+      ],
+      "outputs": {
+        "out": "/nix/store/dmpyks9lmkq1avwhdbdkmc0829c5x8pl-sfw-1.10.0"
+      },
+      "system": "aarch64-darwin",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "sfw",
+      "derivation": "/nix/store/4lmqp2s6xpxi1gh27fwcmm4bvi6migp3-sfw-1.10.0.drv",
+      "description": "Socket Firewall Free - wraps your package manager to prevent installation of malicious packages",
+      "install_id": "sfw",
+      "locked_url": "https://github.com/jbayer/flox-sfw?rev=0d07f76ff6e61da56ca353c411ac503d4957557d",
+      "name": "sfw-1.10.0",
+      "pname": "sfw",
+      "rev": "0d07f76ff6e61da56ca353c411ac503d4957557d",
+      "rev_count": 39,
+      "rev_date": "2026-05-24T17:27:07Z",
+      "scrape_date": "2026-05-24T17:35:36.979640Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "version": "1.10.0",
+      "outputs_to_install": [
+        "out"
+      ],
+      "outputs": {
+        "out": "/nix/store/6cx7g4kq5mmly15p6nm5r5fxlcrqcvrj-sfw-1.10.0"
+      },
+      "system": "aarch64-linux",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "sfw",
+      "derivation": "/nix/store/4zdqmzx36qw1586gbab40i263qy6d9pc-sfw-1.10.0.drv",
+      "description": "Socket Firewall Free - wraps your package manager to prevent installation of malicious packages",
+      "install_id": "sfw",
+      "locked_url": "https://github.com/jbayer/flox-sfw?rev=0d07f76ff6e61da56ca353c411ac503d4957557d",
+      "name": "sfw-1.10.0",
+      "pname": "sfw",
+      "rev": "0d07f76ff6e61da56ca353c411ac503d4957557d",
+      "rev_count": 39,
+      "rev_date": "2026-05-24T17:27:07Z",
+      "scrape_date": "2026-05-24T17:35:36.979642Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "version": "1.10.0",
+      "outputs_to_install": [
+        "out"
+      ],
+      "outputs": {
+        "out": "/nix/store/valwaj3vc46b6683s70xpfxd2knfw49m-sfw-1.10.0"
+      },
+      "system": "x86_64-linux",
+      "group": "toplevel",
+      "priority": 5
+    }
+  ]
+}
