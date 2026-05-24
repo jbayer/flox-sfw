@@ -42,24 +42,28 @@ jobs:
           assets=$(gh release view "v${LATEST}" --repo SocketDev/sfw-free --json assets --jq '.assets')
           darwin_arm64=$(echo "$assets" | jq -r '.[] | select(.name == "sfw-free-macos-arm64") | .digest' | sed 's/^sha256://')
           linux_arm64=$(echo "$assets" | jq -r '.[] | select(.name == "sfw-free-linux-arm64") | .digest' | sed 's/^sha256://')
-          if [ -z "$darwin_arm64" ] || [ -z "$linux_arm64" ]; then
+          linux_x86_64=$(echo "$assets" | jq -r '.[] | select(.name == "sfw-free-linux-x86_64") | .digest' | sed 's/^sha256://')
+          if [ -z "$darwin_arm64" ] || [ -z "$linux_arm64" ] || [ -z "$linux_x86_64" ]; then
             echo "Missing expected asset digests for v${LATEST}" >&2
             exit 1
           fi
           echo "darwin_arm64=$darwin_arm64" >> "$GITHUB_OUTPUT"
           echo "linux_arm64=$linux_arm64" >> "$GITHUB_OUTPUT"
+          echo "linux_x86_64=$linux_x86_64" >> "$GITHUB_OUTPUT"
 
       - name: Apply bump to manifest
         if: steps.versions.outputs.up_to_date == 'false'
         env:
           LATEST: ${{ steps.versions.outputs.latest }}
           DARWIN_SHA: ${{ steps.digests.outputs.darwin_arm64 }}
-          LINUX_SHA: ${{ steps.digests.outputs.linux_arm64 }}
+          LINUX_ARM64_SHA: ${{ steps.digests.outputs.linux_arm64 }}
+          LINUX_X86_64_SHA: ${{ steps.digests.outputs.linux_x86_64 }}
         run: |
           set -euo pipefail
           sed -i -E "s|^SFW_VERSION = \".*\"|SFW_VERSION = \"${LATEST}\"|" .flox/env/manifest.toml
           sed -i -E "s|^SFW_SHA256_DARWIN_ARM64 = \".*\"|SFW_SHA256_DARWIN_ARM64 = \"${DARWIN_SHA}\"|" .flox/env/manifest.toml
-          sed -i -E "s|^SFW_SHA256_LINUX_ARM64 = \".*\"|SFW_SHA256_LINUX_ARM64 = \"${LINUX_SHA}\"|" .flox/env/manifest.toml
+          sed -i -E "s|^SFW_SHA256_LINUX_ARM64 = \".*\"|SFW_SHA256_LINUX_ARM64 = \"${LINUX_ARM64_SHA}\"|" .flox/env/manifest.toml
+          sed -i -E "s|^SFW_SHA256_LINUX_X86_64 = \".*\"|SFW_SHA256_LINUX_X86_64 = \"${LINUX_X86_64_SHA}\"|" .flox/env/manifest.toml
           sed -i -E "s|^version = \".*\"|version = \"${LATEST}\"|" .flox/env/manifest.toml
 
       - name: Open PR

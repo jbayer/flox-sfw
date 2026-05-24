@@ -16,6 +16,8 @@ jobs:
             system: aarch64-darwin
           - runner: ubuntu-24.04-arm
             system: aarch64-linux
+          - runner: ubuntu-24.04
+            system: x86_64-linux
     runs-on: ${{ matrix.runner }}
     steps:
       - uses: actions/checkout@v4
