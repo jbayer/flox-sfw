@@ -66,6 +66,22 @@ jobs:
           sed -i -E "s|^SFW_SHA256_LINUX_X86_64 = \".*\"|SFW_SHA256_LINUX_X86_64 = \"${LINUX_X86_64_SHA}\"|" .flox/env/manifest.toml
           sed -i -E "s|^version = \".*\"|version = \"${LATEST}\"|" .flox/env/manifest.toml
 
+      - name: Install Flox
+        if: steps.versions.outputs.up_to_date == 'false'
+        uses: flox/install-flox-action@v2
+
+      - name: Re-lock manifest
+        if: steps.versions.outputs.up_to_date == 'false'
+        run: |
+          set -euo pipefail
+          # The sed bump only edits manifest.toml; manifest.lock still
+          # carries the previous version + sha256s. Regenerate the lock
+          # with the same `flox build` the publish workflow uses, so the
+          # committed lock is byte-identical and publish's clean-repo
+          # check passes. This also downloads + sha256-verifies the
+          # x86_64 binary, gating the PR on a buildable bump.
+          flox build sfw
+
       - name: Open PR
         if: steps.versions.outputs.up_to_date == 'false'
         uses: peter-evans/create-pull-request@v8
