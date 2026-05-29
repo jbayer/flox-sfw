@@ -17,14 +17,14 @@ curl.pkg-path = "curl"
 coreutils.pkg-path = "coreutils"
 
 [vars]
-SFW_VERSION = "1.10.0"
-SFW_SHA256_DARWIN_ARM64 = "fd75944bddc663bee2b19f15367706387113d9609fea4f51b02fc3b5dbdb9281"
-SFW_SHA256_LINUX_ARM64 = "d7e969c17e6d23ac1cb0dea81ff87ef9bca2d83570270d91aab14b2a7fb66ad4"
-SFW_SHA256_LINUX_X86_64 = "1ea16f15f1217bde66ac9c7d0262c7126b7bb1b2d60e14e8fa0982456139ae6e"
+SFW_VERSION = "1.11.0"
+SFW_SHA256_DARWIN_ARM64 = "b7d01794366c423334a0595509690562a1eaceef0c1daeb1e1b8261f068d5a27"
+SFW_SHA256_LINUX_ARM64 = "affceaccc22e8e84b59349cf493e206e2c17b442cec378d796209c026f140571"
+SFW_SHA256_LINUX_X86_64 = "b74c3fa54e6e2afcc9b780119d615b814ab19cc7ce2ef4543176870cb09170a2"
 
 [build.sfw]
 description = "Socket Firewall Free - wraps your package manager to prevent installation of malicious packages"
-version = "1.10.0"
+version = "1.11.0"
 sandbox = "off"
 runtime-packages = []
 command = '''
