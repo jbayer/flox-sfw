@@ -1,6 +1,6 @@
-# archive announcement
+# Archive announcement
 
-This repository is now considered "archived" as [flox is publishing a flox sfw package and environment]([https://github.com/flox/floxenvs](https://github.com/flox/floxenvs/tree/main/sfw).
+This repository is now considered "archived" as [flox is publishing a flox sfw package and environment](https://github.com/flox/floxenvs/tree/main/sfw) that should be used instead.
 
 ## flox-sfw
 
