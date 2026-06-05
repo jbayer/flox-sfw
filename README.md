@@ -1,4 +1,8 @@
-# flox-sfw
+# archive announcement
+
+This repository is now considered "archived" as [flox is publishing a flox sfw package and environment]([https://github.com/flox/floxenvs](https://github.com/flox/floxenvs/tree/main/sfw).
+
+## flox-sfw
 
 Flox packaging of [Socket Firewall Free (sfw)](https://github.com/SocketDev/sfw-free) — a wrapper that filters network traffic for package managers to block installation of malicious packages.
 
